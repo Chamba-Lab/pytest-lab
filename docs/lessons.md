@@ -21,3 +21,8 @@ Lecciones de construir y revisar los labs de este repositorio. Léelas antes de 
 - **Una suite completa mata a un mutante por más de un lado.** Al aislar las pruebas resultó que el mutante del reloj real muere con la prueba del último día y también con la de recordatorios. La respuesta verificada distingue "qué prueba de esta tarea" de "qué pruebas de la suite".
 - **Los stubs no deben pedir fixtures que aún no existen.** `def test_x(library)` sin la fixture da *error* en la preparación, no `skip`. El verificador lo marcaría como rojo por la razón equivocada.
 - **Trampas verificadas que vale la pena reutilizar:** `scope="module"` sobre `tmp_path` da `ScopeMismatch`; una ruta fija arrastra estado entre corridas (5 fallos en la primera, 6 en la segunda); un `Mock()` sin `spec` deja vivo al mutante que llama a un método inexistente.
+
+## Lab 1.5
+- **Un exprés que termina "gratis" esconde el multiplicador.** El mutante `× 3` sobrevive con 100% de cobertura porque la única prueba de exprés cae en el caso del envío gratis. Se diseñó así a propósito y se comprobó en PowerShell, en el orden de la guía.
+- **Las semillas de hash que fallan dependen de la versión de Python.** Con 3.12, `PYTHONHASHSEED=0` falla y `2` pasa; la guía lo dice y pide buscar las propias en otra versión.
+- **`--durations` con `-vv` no muestra "todas":** sigue limitado a N y además incluye las fases de preparación y cierre. Se corrigió la frase después de correrlo.
