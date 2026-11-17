@@ -48,9 +48,13 @@ python -m pip install -r requirements.txt
 ```powershell
 python --version
 python -m pytest --version
+python -c "import sys; print(sys.prefix)"
 ```
 
-Deberías ver Python 3.12 o superior y `pytest 9.2.0`.
+Deberías ver Python 3.12 o superior, `pytest 9.2.0` y una ruta que **termina en `.venv`**.
+
+> [!WARNING]
+> Si la última línea no termina en `.venv`, el entorno no está activo y estás usando otro Python, con otras versiones. Pasa, por ejemplo, con Git Bash en máquinas que tienen Anaconda. Usa PowerShell, o llama al Python del entorno directamente: `.venv/Scripts/python` en Windows o `.venv/bin/python` en Linux y macOS.
 
 ## 4. Guarda tus soluciones en tu propia rama
 

@@ -22,7 +22,7 @@ Pruebas que fallan por la razón correcta.
 | ID | Tema | Tipo de tema | Tipo de lab | Qué se practica | Dueño de / se apoya en | Parte de | Estado |
 |---|---|---|---|---|---|---|---|
 | [1.1](labs/01-fundamentals/01-why-test/README.md) | ¿Qué probar y por qué? | 🎯 `core` | 💭 `concept` | Pirámide de pruebas, unitaria / integración / aceptación, Arrange-Act-Assert, qué hace buena a una prueba, la prueba que pasa por la razón equivocada | Dueño del vocabulario | — | 🟨 `built` |
-| 1.2 | Primeras pruebas | 🎯 `core` | 🧩 `challenge` | Descubrimiento, `assert` e introspección, `pytest.raises`, `approx`, leer un fallo, `-k` / `-x` / `-v`, caza de mutantes | Dueño del ciclo rojo-verde | Módulo `grades.py` terminado | ⬜ `pending` |
+| [1.2](labs/01-fundamentals/02-first-tests/README.md) | Primeras pruebas | 🎯 `core` | 🧩 `challenge` | Descubrimiento, `assert` e introspección, `pytest.raises`, `approx`, leer un fallo, `-k` / `-x` / `-v`, caza de mutantes | Dueño del ciclo rojo-verde | Módulo `grades.py` terminado | 🟨 `built` |
 | 1.3 | Parametrizar y organizar | 🎯 `core` 🆕 `modern` | 🧩 `challenge` | `parametrize` e `ids`, `xfail` estricto, marcas propias, configuración nativa `[tool.pytest]` y opciones strict | Dueño de parametrización, marcas y configuración. Se apoya en 1.2 | Módulo `passwords.py` terminado | ⬜ `pending` |
 | 1.4 | Fixtures y dobles de prueba | 🎯 `core` | 🧩 `challenge` | Fixtures y su `scope`, `conftest.py`, `tmp_path`, `monkeypatch`, fake frente a mock, `create_autospec`, reloj inyectable | Dueño de fixtures y dobles. Se apoya en 1.2 | Módulo `loans.py` terminado | ⬜ `pending` |
 | 1.5 | Cobertura y pruebas inestables | 🎯 `core` | 🔭 `exploration` | Cobertura de líneas y de ramas, 100% de cobertura con un bug vivo, pruebas que dependen del orden o del hash, `--lf` / `--sw` / `--durations` | Dueño de cobertura e inestabilidad | `demo/` terminado | ⬜ `pending` |
@@ -30,4 +30,6 @@ Pruebas que fallan por la razón correcta.
 
 ## Notas para los siguientes labs
 - El entorno es único (`.venv` en la raíz, `requirements.txt`). Cada variante tiene su `pyproject.toml` con `[tool.pytest]` y `pythonpath = ["."]`.
-- La caza de mutantes vive en `tests/test_mutant_hunt.py` de cada challenge, con los mutantes en `tests/mutants/<id>/`. Los stubs del starter usan `pytest.skip("TODO …")`.
+- La caza de mutantes vive en `tests/test_mutant_hunt.py` de cada challenge, con los mutantes en `tests/mutants/<id>/` y un `tests/conftest.py` que antepone el mutante a la ruta de importación según una variable de entorno. Los stubs del starter usan `pytest.skip("TODO …")`. Copia la caza del lab 1.2 y cambia el módulo y la variable (`GRADES_MUTANT` → la del nuevo lab); conserva `PYTHONIOENCODING=utf-8` (ver `docs/lessons.md`).
+- Cada trampa del README se verifica en una copia limpia con un script que imprime cuántas pruebas corrieron; los mutantes se generan con un script que exige que cada reemplazo ocurra exactamente una vez.
+- 1.3 (parametrizar) reutiliza la idea de la caza para validar `xfail` estricto: una variante "bug corregido" debe hacer fallar la suite.
