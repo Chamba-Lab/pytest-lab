@@ -26,3 +26,9 @@ Lecciones de construir y revisar los labs de este repositorio. Léelas antes de 
 - **Un exprés que termina "gratis" esconde el multiplicador.** El mutante `× 3` sobrevive con 100% de cobertura porque la única prueba de exprés cae en el caso del envío gratis. Se diseñó así a propósito y se comprobó en PowerShell, en el orden de la guía.
 - **Las semillas de hash que fallan dependen de la versión de Python.** Con 3.12, `PYTHONHASHSEED=0` falla y `2` pasa; la guía lo dice y pide buscar las propias en otra versión.
 - **`--durations` con `-vv` no muestra "todas":** sigue limitado a N y además incluye las fases de preparación y cierre. Se corrigió la frase después de correrlo.
+
+## Proyecto 1.P
+- **La lista de mutaciones encontró dos huecos en mi propia suite.** M07 (el deudor alfabético en vez del mayor) sobrevivía porque los datos de la prueba no separaban los dos criterios; se cambiaron los nombres. Escribir la lista mientras se diseñan las pruebas, y correrla, es lo que hace honesta la tabla de `REVIEW.md`.
+- **Un entorno de pruebas demasiado cómodo esconde bugs.** El script de mutaciones fijaba `PYTHONIOENCODING=utf-8` para sus procesos y así la mutación que quita la salida UTF-8 (M12) pasaba. Sin esa variable, en Windows, la prueba A8 la atrapa. La aceptación no fija variables de entorno de Python a propósito: es de caja negra.
+- **Ninguna suite sola basta.** Unitarias y aceptación ven mutaciones distintas (M08 y M12 solo la aceptación; M05, M07, M10 y M13 solo las unitarias). La tabla lo deja a la vista.
+- **Una prueba unitaria que compara con la misma constante que el código no protege el valor** (M08: `EXIT_INPUT_ERROR`). Cuando el número es parte del contrato, se escribe literal en la aceptación.

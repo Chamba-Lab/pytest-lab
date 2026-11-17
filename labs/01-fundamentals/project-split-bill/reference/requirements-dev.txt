@@ -1,0 +1,3 @@
+# Test dependencies of the reference implementation (it has no runtime dependencies).
+pytest==9.2.0
+pytest-cov==7.1.0

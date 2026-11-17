@@ -1,0 +1,6 @@
+# Black-box acceptance tests. They run the command line of any implementation
+# (the reference by default; see conftest.py) and need only pytest.
+[tool.pytest]
+testpaths = ["."]
+strict_markers = true
+strict_xfail = true

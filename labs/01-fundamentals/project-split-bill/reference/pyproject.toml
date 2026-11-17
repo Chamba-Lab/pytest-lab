@@ -1,0 +1,14 @@
+# The project is atomic: it declares its own metadata, test dependencies
+# (requirements-dev.txt) and pytest configuration, and imports nothing from the labs.
+[project]
+name = "splitbill"
+version = "1.0.0"
+description = "Split shared expenses fairly, to the cent."
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["src"]
+strict_markers = true
+strict_xfail = true

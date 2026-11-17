@@ -1,0 +1,5 @@
+payer,amount,participants
+ana,120.00,ana;beto;caro;dani
+beto,45.50,beto;caro
+caro,100.00,ana;beto;caro
+dani,9.99,dani;ana
