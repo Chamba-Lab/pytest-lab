@@ -21,7 +21,7 @@ Pruebas que fallan por la razón correcta.
 
 | ID | Tema | Tipo de tema | Tipo de lab | Qué se practica | Dueño de / se apoya en | Parte de | Estado |
 |---|---|---|---|---|---|---|---|
-| 1.1 | ¿Qué probar y por qué? | 🎯 `core` | 💭 `concept` | Pirámide de pruebas, unitaria / integración / aceptación, Arrange-Act-Assert, qué hace buena a una prueba, la prueba que pasa por la razón equivocada | Dueño del vocabulario | — | ⬜ `pending` |
+| [1.1](labs/01-fundamentals/01-why-test/README.md) | ¿Qué probar y por qué? | 🎯 `core` | 💭 `concept` | Pirámide de pruebas, unitaria / integración / aceptación, Arrange-Act-Assert, qué hace buena a una prueba, la prueba que pasa por la razón equivocada | Dueño del vocabulario | — | 🟨 `built` |
 | 1.2 | Primeras pruebas | 🎯 `core` | 🧩 `challenge` | Descubrimiento, `assert` e introspección, `pytest.raises`, `approx`, leer un fallo, `-k` / `-x` / `-v`, caza de mutantes | Dueño del ciclo rojo-verde | Módulo `grades.py` terminado | ⬜ `pending` |
 | 1.3 | Parametrizar y organizar | 🎯 `core` 🆕 `modern` | 🧩 `challenge` | `parametrize` e `ids`, `xfail` estricto, marcas propias, configuración nativa `[tool.pytest]` y opciones strict | Dueño de parametrización, marcas y configuración. Se apoya en 1.2 | Módulo `passwords.py` terminado | ⬜ `pending` |
 | 1.4 | Fixtures y dobles de prueba | 🎯 `core` | 🧩 `challenge` | Fixtures y su `scope`, `conftest.py`, `tmp_path`, `monkeypatch`, fake frente a mock, `create_autospec`, reloj inyectable | Dueño de fixtures y dobles. Se apoya en 1.2 | Módulo `loans.py` terminado | ⬜ `pending` |
