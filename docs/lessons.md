@@ -16,3 +16,8 @@ Lecciones de construir y revisar los labs de este repositorio. Léelas antes de 
 - **Verifica también lo que "suena obvio".** Iba a escribir que una marca mal escrita pasa "en silencio"; al correrlo, pytest emite `PytestUnknownMarkWarning: Unknown pytest.mark.slwo - is this a typo?`. El README dice lo que pasó de verdad.
 - **Una variante "bug corregido" valida un `xfail` estricto.** Con `xfail` no estricto, la suite queda en verde (`8 passed, 1 xpassed`) cuando alguien arregla el bug; la variante `f1` lo convierte en un fallo que el aprendiz ve.
 - **La salida de la caza mostraba todo el objeto `CompletedProcess`.** La introspección de `assert` lo expande; asignar `exit_code = result.returncode` antes del `assert` deja el mensaje limpio.
+
+## Lab 1.4
+- **Una suite completa mata a un mutante por más de un lado.** Al aislar las pruebas resultó que el mutante del reloj real muere con la prueba del último día y también con la de recordatorios. La respuesta verificada distingue "qué prueba de esta tarea" de "qué pruebas de la suite".
+- **Los stubs no deben pedir fixtures que aún no existen.** `def test_x(library)` sin la fixture da *error* en la preparación, no `skip`. El verificador lo marcaría como rojo por la razón equivocada.
+- **Trampas verificadas que vale la pena reutilizar:** `scope="module"` sobre `tmp_path` da `ScopeMismatch`; una ruta fija arrastra estado entre corridas (5 fallos en la primera, 6 en la segunda); un `Mock()` sin `spec` deja vivo al mutante que llama a un método inexistente.
