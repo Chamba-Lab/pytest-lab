@@ -1,0 +1,27 @@
+# StudyForge configuration. Read by the workflows and by tools/verify.py.
+# Reference: https://github.com/Chamba-Lab/studyforge/blob/master/skills/studyforge/references/layout.md
+studyforge = "0.1.0"
+
+[path]
+title = "Testing en Python con pytest: de cero a confiable"
+goal = "Escribir y mantener pruebas automatizadas con criterio profesional: pruebas que fallan por la razón correcta"
+
+[language]
+content = "es"   # guides, concepts, READMEs. Code, folders and commits: always English.
+
+[learner]
+os = "windows"
+shells = ["powershell", "bash"]
+containers = "none"
+
+[dependencies]
+strategy = "shared-parent"   # one virtual environment from requirements.txt; projects declare their own
+
+# Every lab variant (starter/, solution/, demo/, reference/) has its own pyproject.toml
+# with the pytest configuration. Run with the virtual environment activated.
+[[stack]]
+id = "python"
+detect = "pyproject.toml"
+command = "python -m pytest -q -p no:cacheprovider --junitxml=.reports/junit.xml"
+reports = ".reports/junit.xml"
+timeout = 300

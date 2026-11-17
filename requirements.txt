@@ -1,0 +1,3 @@
+# Shared by every lab. Versions are pinned and upgraded together (see AGENTS.md).
+pytest==9.2.0
+pytest-cov==7.1.0
