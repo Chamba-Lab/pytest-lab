@@ -38,7 +38,8 @@ def against_real_code() -> subprocess.CompletedProcess[str]:
 
 
 def test_your_tests_pass_against_the_real_code(against_real_code):
-    assert against_real_code.returncode == 0, (
+    exit_code = against_real_code.returncode
+    assert exit_code == 0, (
         "Your tests must pass against the real grades.py before they can catch mutants.\n"
         + last_lines(against_real_code)
     )
@@ -49,7 +50,8 @@ def test_your_tests_catch(mutant, against_real_code):
     if against_real_code.returncode != 0:
         pytest.fail("First make your tests pass against the real grades.py (see the test above).")
     result = run_your_tests(mutant)
-    assert result.returncode == TESTS_FAILED, (
+    exit_code = result.returncode
+    assert exit_code == TESTS_FAILED, (
         f"Mutant '{mutant}' survived: your tests still pass when grades.py has this bug.\n"
         + last_lines(result, 3)
     )

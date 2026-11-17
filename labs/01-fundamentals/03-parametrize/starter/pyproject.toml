@@ -1,0 +1,4 @@
+# pytest configuration for this lab. Task 3 moves it to the native [tool.pytest] table.
+[tool.pytest.ini_options]
+testpaths = "tests"
+pythonpath = "."
