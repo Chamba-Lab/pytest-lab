@@ -11,7 +11,7 @@ from grades import average, passed, ranking
 
 
 def test_average_of_several_grades():
-    pytest.skip("TODO task 1: average([70, 85, 90]) with pytest.approx")
+    pytest.skip("TODO task 1: average([70, 85, 90])")
 
 
 def test_average_of_decimal_grades():

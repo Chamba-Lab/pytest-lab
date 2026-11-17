@@ -38,6 +38,7 @@ pwd
 - **Inyección de dependencias:** `Library` recibe su almacén, su reloj y su notificador en lugar de crearlos. Por eso se pueden reemplazar en las pruebas.
 - **Dobles de prueba:** un **fake** es una implementación simple que funciona de verdad (el `FakeClock`); un **mock** registra cómo lo llamaron para que la prueba lo compruebe. `create_autospec` hace un mock que solo acepta lo que la clase real tiene.
 - **`monkeypatch`:** cambia variables de entorno, atributos o diccionarios durante una prueba y los **restaura** al terminar.
+- **`capsys`:** fixture de pytest que captura lo que el código imprime; `capsys.readouterr()` devuelve `.out` y `.err`. La usarás en el proyecto del bloque para probar una línea de comandos.
 
 ## 📚 Documentación
 - [How to use fixtures](https://docs.pytest.org/en/stable/how-to/fixtures.html) y [fixture scopes](https://docs.pytest.org/en/stable/how-to/fixtures.html#scope-sharing-fixtures-across-classes-modules-packages-or-session)
@@ -90,26 +91,24 @@ python -m pytest
   - `notifier`: `create_autospec(Notifier, instance=True)`;
   - `store`: un `LoanStore` sobre `tmp_path / "loans.json"`;
   - `library`: pide las otras tres y arma la `Library`.
-- [ ] En `test_a_loan_is_saved_to_the_file(library, tmp_path)`: presta un libro y léelo con un `LoanStore` **nuevo** sobre el mismo archivo.
+- [ ] En `test_a_loan_is_saved_to_the_file(library, tmp_path)`: presta un libro y léelo con un `LoanStore` **nuevo** sobre el mismo archivo (dentro de una misma prueba, `tmp_path` es la misma carpeta que recibió `store`).
 - [ ] En `test_a_book_cannot_be_lent_twice(library)`: el segundo préstamo del mismo libro lanza `ValueError`.
 
 🔮 **Predice primero:** el archivo es el mismo para todas las pruebas, ¿así que conviene que `store` sea `scope="module"` para crearlo una sola vez? Pruébalo.
 
-> [!WARNING]
-> Una fixture compartida comparte también su estado. Y una ruta fija (`Path("loans.json")`) sobrevive incluso entre corridas.
 
 ### Tarea 2 · Un reloj que controla la prueba
 **Meta:** probar el límite del plazo sin esperar 14 días. **La validan:** `[m3-last-day-is-late]` y `[m4-ignores-the-clock]`.
 
-- [ ] Presta un libro, avanza el reloj **exactamente** 14 días (`clock.advance(days=14)`) y comprueba que **no** está atrasado.
-- [ ] En la otra prueba, avanza 14 días y 1 segundo y comprueba que sí lo está.
+- [ ] En `test_a_loan_is_not_overdue_on_its_last_day`: presta un libro, avanza el reloj **exactamente** 14 días (`clock.advance(days=14)`) y comprueba que **no** está atrasado.
+- [ ] En `test_a_loan_is_overdue_after_its_last_day`: avanza 14 días y 1 segundo y comprueba que sí lo está.
 
 🔮 **Predice primero:** ¿cuál de las dos pruebas mata al mutante que usa la hora real?
 
 ### Tarea 3 · Un doble del notificador
 **Meta:** comprobar a quién se avisó, sin enviar nada de verdad. **La validan:** `[m5-reminds-everyone]` y `[m6-calls-a-missing-method]`.
 
-- [ ] Presta un libro, avanza 10 días, presta otro y avanza 5 más: el primero está atrasado y el segundo no.
+- [ ] Presta `"Dune"` a `"ana"`, avanza 10 días, presta `"Emma"` a `"beto"` y avanza 5 más: el primero está atrasado y el segundo no.
 - [ ] Comprueba que `send_reminders()` devuelve 1 **y** que el notificador recibió exactamente ese aviso: `notifier.send.assert_called_once_with("ana", "Please return 'Dune'")`.
 
 🔮 **Predice primero:** si solo compruebas que `send_reminders()` devuelve 1, ¿qué mutantes sobreviven? ¿Y si además el doble fuera un `Mock()` sin `spec`?
@@ -120,8 +119,7 @@ python -m pytest
 - [ ] Pide la fixture `monkeypatch` y usa `monkeypatch.setenv("LOAN_DAYS", "7")`.
 - [ ] Presta un libro, avanza 8 días y comprueba que está atrasado.
 
-> [!WARNING]
-> `os.environ["LOAN_DAYS"] = "7"` también "funciona"… hasta que otra prueba corre después.
+🔮 **Predice primero:** ¿qué pasaría si en lugar de `monkeypatch` escribieras `os.environ["LOAN_DAYS"] = "7"`?
 
 **Criterio de éxito:** `python -m pytest` en `starter/` termina en verde: 14 pruebas pasan.
 
@@ -146,7 +144,7 @@ Con el starter tal cual:
 Pasa el guardián; fallan los 7 mutantes; tus 6 pruebas se saltan.
 
 ## 💼 En proyectos reales
-- **Inyecta lo que cambia** (hora, archivos, red, dinero externo). Si el código crea sus dependencias adentro (`datetime.now()`, `smtplib.SMTP(...)`), tendrás que hacer `monkeypatch` de módulos, que es frágil. Si las recibe, la prueba simplemente le pasa otras.
+- **Inyecta lo que cambia** (hora, archivos, red, servicios externos). Si el código crea sus dependencias adentro (`datetime.now()`, `smtplib.SMTP(...)`), tendrás que hacer `monkeypatch` de módulos, que es frágil. Si las recibe, la prueba simplemente le pasa otras.
 - **`scope` más amplio solo para lo caro e inmutable** (por ejemplo, levantar un contenedor de base de datos una vez por sesión). Lo que guarda estado, por función.
 - **Prefiere fakes para comportamiento, mocks para interacciones.** El `FakeClock` funciona de verdad; el mock del notificador sirve para preguntar "¿a quién avisaste?".
 - **Siempre con `spec`/`autospec`.** Un `Mock()` desnudo acepta cualquier método, así que un error de nombre pasa las pruebas y explota en producción.
@@ -199,13 +197,14 @@ E   AttributeError: Mock object has no attribute 'send_message'
 
 Para matar a `m5` hace falta preguntarle al doble: `assert_called_once_with`.
 
-**Tarea 4.** Con `os.environ["LOAN_DAYS"] = "7"` en una prueba que corre antes que las del reloj, la variable sigue puesta y rompe la prueba del último día:
+**Tarea 4.** `os.environ["LOAN_DAYS"] = "7"` deja la variable puesta para todo lo que corre después. En este archivo, la prueba del entorno es la última, así que tus pruebas pasan… pero la caza corre después y sus procesos heredan `LOAN_DAYS=7`. Contra el código real, la prueba del último día falla, el guardián se pone rojo y bloquea a los 7 mutantes:
 
 ```text
-FAILED tests/test_loans.py::test_a_loan_is_not_overdue_on_its_last_day - Asse...
+E   AssertionError: Your tests must pass against the real loans.py before they can catch mutants.
+      1 failed, 5 passed in 0.09s
 ```
 
-`monkeypatch.setenv` la restaura al terminar la prueba. Que una prueba falle según qué corrió antes es el tema del lab 1.5.
+Y si la prueba del entorno corriera **antes** que las del reloj, rompería directamente la del último día. `monkeypatch.setenv` la restaura al terminar la prueba. Que una prueba falle según qué corrió antes es el tema del lab 1.5.
 </details>
 
 ## 🎤 Autoevaluación
@@ -221,3 +220,5 @@ La solución completa está en [`solution/`](solution/).
 - ¿Qué entendí?
 - ¿Qué me costó?
 - ¿Qué debería reforzar?
+
+**Siguiente:** [1.5 · Cobertura y pruebas inestables](../05-coverage-flaky/README.md)

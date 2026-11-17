@@ -9,7 +9,7 @@ Instala esto una sola vez, antes del lab 1.1.
 | pytest y pytest-cov | las de `requirements.txt` (se instalan abajo) | `python -m pytest --version` |
 
 > [!NOTE]
-> En Windows, si `python` abre la Microsoft Store o no existe, instala Python desde [python.org](https://www.python.org/downloads/) y marca *Add python.exe to PATH*. El lanzador `py` también sirve: usa `py` donde la guía dice `python` solo para crear el entorno virtual.
+> En Windows, si `python` abre la Microsoft Store o no existe, instala Python desde [python.org](https://www.python.org/downloads/) y marca *Add python.exe to PATH*. El lanzador `py` también sirve: usa `py -m venv .venv` para crear el entorno; una vez activo, `python` ya es el del entorno.
 
 ## 1. Clona tu copia
 

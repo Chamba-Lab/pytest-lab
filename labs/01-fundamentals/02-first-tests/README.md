@@ -74,7 +74,7 @@ flowchart LR
 | `m5-ties-insertion-order` | Los empates quedan en el orden en que llegaron | 4 |
 
 > [!TIP]
-> Intenta no abrir los mutantes: la tabla basta. Si te trabas, abrir uno es una pista legítima.
+> Intenta no abrir los mutantes: la tabla basta. Si te atascas, abrir uno es una pista legítima.
 
 ## ✅ Tareas
 
@@ -98,14 +98,12 @@ python -m pytest
 - [ ] En `test_average_of_several_grades`, comprueba el promedio de `[70, 85, 90]`.
 - [ ] En `test_average_of_decimal_grades`, comprueba que el promedio de `[0.1, 0.2]` es `0.15`.
 
-🔮 **Predice primero:** ¿pasará `assert average([0.1, 0.2]) == 0.15`? Escríbelo, córrelo y lee el fallo.
+🔮 **Predice primero:** ¿pasará `assert average([0.1, 0.2]) == 0.15`? Escríbelo y córrelo.
 
 ```powershell
 python -m pytest tests/test_grades.py
 ```
 
-> [!WARNING]
-> Comparar decimales con `==` es una trampa clásica. Mira bien el número que muestra pytest.
 
 ### Tarea 2 · Los errores
 **Meta:** comprobar que la entrada inválida lanza `ValueError`. **La validan:** `[m2-empty-returns-zero]` y `[m3-no-range-check]`.
@@ -115,8 +113,6 @@ python -m pytest tests/test_grades.py
 
 🔮 **Predice primero:** ¿pasará `pytest.raises(ValueError, match="out of range [0, 100]")`?
 
-> [!WARNING]
-> `match` no compara texto: busca una expresión regular. Los corchetes tienen un significado especial.
 
 ### Tarea 3 · El límite
 **Meta:** comprobar el borde exacto de `passed`. **La valida:** `[m4-strict-boundary]`.
@@ -132,8 +128,11 @@ python -m pytest tests/test_grades.py
 
 🔮 **Predice primero:** si escribes los empatados en orden alfabético (`{"ana": 90, "beto": 95, "zoe": 90}`), ¿muere el mutante m5?
 
-> [!WARNING]
-> Una prueba puede pasar con el código real y también con el bug si los datos no permiten distinguirlos.
+Corre solo esta parte (tu prueba y su mutante):
+
+```powershell
+python -m pytest -k ties -v
+```
 
 **Criterio de éxito:** `python -m pytest` dentro de `starter/` termina en verde: 12 pruebas pasan, ninguna se salta.
 
@@ -148,6 +147,7 @@ python -m pytest tests/test_grades.py
 | `-k ties` | Solo las pruebas cuyo nombre o ID contiene `ties`; incluye `[m5-ties-insertion-order]` de la caza |
 | `-x` | Se detiene en el primer fallo |
 | `--tb=short` | Trazas de error más cortas |
+| `with pytest.raises(ValueError) as error:` | Además guarda la excepción: `error.value` es el objeto, y `str(error.value)` su mensaje |
 
 ## 👀 Qué deberías ver
 Al empezar, con el starter tal cual:
@@ -161,7 +161,7 @@ FAILED tests/test_mutant_hunt.py::test_your_tests_catch[m5-ties-insertion-order]
 =================== 5 failed, 1 passed, 6 skipped in 2.24s ====================
 ```
 
-La prueba que ya pasa es `test_your_tests_pass_against_the_real_code`: unas pruebas que se saltan no fallan contra el código real, pero tampoco matan a nadie. Cada tarea que resuelvas pone en verde sus mutantes.
+La prueba que ya pasa es `test_your_tests_pass_against_the_real_code`, el **guardián**: unas pruebas que se saltan no fallan contra el código real, pero tampoco matan a nadie. Cada tarea que resuelvas pone en verde sus mutantes.
 
 ## 💼 En proyectos reales
 - **Nombra las pruebas por el comportamiento** (`test_the_passing_grade_itself_passes`), no por la función (`test_passed_2`): cuando falla en el CI, el nombre ya dice qué se rompió.
@@ -232,3 +232,5 @@ La solución completa está en [`solution/`](solution/).
 - ¿Qué entendí?
 - ¿Qué me costó?
 - ¿Qué debería reforzar?
+
+**Siguiente:** [1.3 · Parametrizar y organizar](../03-parametrize/README.md)

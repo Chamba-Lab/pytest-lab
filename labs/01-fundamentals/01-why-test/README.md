@@ -16,10 +16,10 @@ Escribir pruebas es fácil; escribir pruebas que **atrapen bugs** no lo es. Una 
 
 ## 🧠 Conceptos
 Lee **[CONCEPT.md](CONCEPT.md)**. Cubre:
-- Para qué sirven las pruebas: feedback rápido, cambiar sin miedo, documentación, diseño.
+- Para qué sirven las pruebas: respuesta rápida, cambiar sin miedo, documentación, diseño.
 - La pirámide de pruebas y el costo de cada nivel.
 - Arrange-Act-Assert.
-- Qué hace buena a una prueba (rápida, aislada, repetible, auto-verificable, enfocada).
+- Qué hace buena a una prueba (rápida, aislada, repetible, autoverificable, enfocada).
 - **La prueba que pasa por la razón equivocada**, y qué es un mutante.
 - Qué probar y qué no.
 
@@ -48,7 +48,7 @@ Responde cada pregunta antes de abrir su respuesta.
 4. **¿Qué diferencia hay entre probar comportamiento y probar detalles internos? Da un ejemplo.**
    <details><summary>💡 Respuesta</summary>
 
-   El comportamiento es lo que el código promete hacia afuera ("una compra de 100 tiene 10% de descuento"); los detalles internos son cómo lo logra ("llama a `_rule_for` con el total"). Las pruebas de comportamiento sobreviven a una reorganización del código; las de detalles se rompen aunque todo siga funcionando, y terminan estorbando.
+   El comportamiento es lo que el código promete hacia afuera ("una compra de 100 tiene 10% de descuento"); los detalles internos son cómo lo logra ("llama a `_apply_rule` con el total"). Las pruebas de comportamiento sobreviven a una reorganización del código; las de detalles se rompen aunque todo siga funcionando, y terminan estorbando.
    </details>
 5. **pytest terminó con el código de salida 5. ¿Qué pasó y por qué debería preocuparte en un CI?**
    <details><summary>💡 Respuesta</summary>

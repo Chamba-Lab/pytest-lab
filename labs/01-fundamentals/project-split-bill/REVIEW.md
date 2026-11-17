@@ -15,7 +15,7 @@ Cómo leer la implementación de referencia, por qué es como es, y cómo compro
 | El céntimo sobrante va por orden alfabético | Es determinista y fácil de explicar; el orden del archivo dependería de cómo alguien escribió la fila | 1.2 (empates) |
 | Validar con una expresión regular antes de `Decimal(...)` | `Decimal` acepta `1e3`, `NaN` o `-5`; el contrato no | 1.3 (un caso por regla) |
 | `InputError` con el número de línea, convertido en código 2 solo en `cli.py` | El dominio no sabe de procesos; la CLI traduce. Las pruebas unitarias comprueban el mensaje y las de aceptación el código | 1.4 (inyectar el borde) |
-| `utf-8-sig` al leer y salida forzada a UTF-8 | Excel guarda con BOM; la consola de Windows no usa UTF-8 por defecto | lecciones de entorno del camino |
+| `utf-8-sig` al leer y salida forzada a UTF-8 | Excel guarda con BOM; la consola de Windows no usa UTF-8 por defecto | [SETUP.md](../../../SETUP.md) y la caza del lab 1.2 (`PYTHONIOENCODING`) |
 | Pruebas de aceptación por subproceso, con `SPLITBILL_CMD` | Juzgan **cualquier** implementación, incluso en otro lenguaje; solo conocen el contrato | 1.1 (pirámide) |
 
 ## Trampas encontradas al construirlo
@@ -24,9 +24,9 @@ Cómo leer la implementación de referencia, por qué es como es, y cómo compro
 - **`Decimal("-0.00")` existe** y se muestra como `-0.00` con el formato `+.2f`. `format_amount` trata cualquier cero como `0.00`, y hay un caso de prueba para eso.
 
 ## 🔨 Rómpelo tú
-Cambia **una** cosa en una copia, corre las dos suites (`reference/` y `acceptance/`) y compara con la falla real de abajo. Cada fila se ejecutó con un script en una copia limpia (Windows, Python 3.12, pytest 9.2.0). Las cifras son "pruebas que fallan / pruebas que corrieron".
+Cambia **una** cosa en `reference/src` (en tu rama; deshazlo con `git restore .`) o en una copia de **toda** la carpeta del proyecto, corre las dos suites (`reference/` y `acceptance/`) y compara con el fallo real de abajo. Ojo: `acceptance/` siempre prueba la `reference/` que está a su lado. Cada fila se ejecutó con un script en una copia limpia (Windows, Python 3.12, pytest 9.2.0). Las cifras son "pruebas que fallan / pruebas que corrieron".
 
-| # | Cambio | Unitarias | Aceptación | Falla real (primera) |
+| # | Cambio | Unitarias | Aceptación | Fallo real (el primero) |
 |---|---|---|---|---|
 | M01 | `money.split`: repartir con `float` y redondear cada parte | 7/46 | 5/15 | `assert Decimal('0.01') == 0` (los saldos no suman cero) |
 | M02 | El céntimo sobrante va a los **últimos** nombres | 4/46 | 1/15 | `assert ['ana -33.33'...'caro -33.34'] == ['ana -33.34'...'caro -33.33']` |
@@ -57,5 +57,5 @@ Cambia **una** cosa en una copia, corre las dos suites (`reference/` y `acceptan
 1. ¿Por qué no basta con redondear cada parte a 2 decimales? Construye un ejemplo en el que la suma no cierre.
 2. Si el grupo prefiere que el céntimo extra lo pague quien pagó la cuenta, ¿qué cambia en el código y qué pruebas tendrían que cambiar?
 3. ¿Qué pruebas de esta suite romperías si cambias `settle` por otro algoritmo válido? ¿Cuáles deberían seguir pasando?
-4. M05, M10 y M13 pasan la aceptación. ¿Agregarías criterios al contrato para cubrirlos o los dejarías como detalles internos? ¿Por qué?
+4. M05 (monto positivo), M10 (espacios) y M13 (cero sin signo) ya están en el contrato del BRIEF, pero ninguna prueba de aceptación los mira. ¿Agregarías pruebas de aceptación para cubrirlos, o los dejarías a las unitarias? ¿Por qué?
 5. ¿Qué pasaría con estas pruebas si un día el archivo tuviera 100 000 filas? ¿Qué medirías?

@@ -28,7 +28,7 @@ Pruebas que fallan por la razón correcta.
 | [1.5](labs/01-fundamentals/05-coverage-flaky/README.md) | Cobertura y pruebas inestables | 🎯 `core` | 🔭 `exploration` | Cobertura de líneas y de ramas, 100% de cobertura con un bug vivo, pruebas que dependen del orden o del hash, `--lf` / `--sw` / `--durations` | Dueño de cobertura e inestabilidad | `demo/` terminado | 🟨 `built` |
 | [1.P](labs/01-fundamentals/project-split-bill/README.md) | Proyecto: dividir la cuenta | 🎯 `core` | 🏗️ `project` | Una CLI que reparte gastos entre amigos con `Decimal`; pruebas unitarias y de aceptación de caja negra | Usa 1.1–1.5 | Desde cero | 🟨 `built` |
 
-## Notas para los siguientes labs
+## Notas de mantenimiento (para quien construye los siguientes labs)
 - El entorno es único (`.venv` en la raíz, `requirements.txt`). Cada variante tiene su `pyproject.toml` con `[tool.pytest]` y `pythonpath = ["."]`.
 - La caza de mutantes vive en `tests/test_mutant_hunt.py` de cada challenge, con los mutantes en `tests/mutants/<id>/` y un `tests/conftest.py` que antepone el mutante a la ruta de importación según una variable de entorno. Los stubs del starter usan `pytest.skip("TODO …")`. Copia la caza del lab 1.2 y cambia el módulo y la variable (`GRADES_MUTANT` → la del nuevo lab); conserva `PYTHONIOENCODING=utf-8` (ver `docs/lessons.md`).
 - Cada trampa del README se verifica en una copia limpia con un script que imprime cuántas pruebas corrieron; los mutantes se generan con un script que exige que cada reemplazo ocurra exactamente una vez.

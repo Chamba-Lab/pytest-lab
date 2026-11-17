@@ -1,4 +1,4 @@
-"""Tests for shipping.py. They pass and cover every line. Do they test everything?"""
+"""Tests for shipping.py."""
 
 import pytest
 

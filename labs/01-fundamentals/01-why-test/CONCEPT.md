@@ -3,10 +3,10 @@
 ## La idea en una frase
 Una prueba automatizada es código que ejecuta tu código y **te avisa sin que tengas que mirar** cuando deja de hacer lo que prometía.
 
-Piénsala como una alarma de humo: no apaga el incendio, pero avisa a tiempo. Y una alarma sin pila es peor que no tener alarma, porque te da una tranquilidad falsa. Este camino trata sobre pruebas que de verdad pueden sonar.
+Piénsala como una alarma de humo: no apaga el incendio, pero avisa a tiempo. Y una alarma sin pila es peor que no tener alarma, porque te da una tranquilidad falsa. Este curso trata sobre pruebas que de verdad pueden sonar.
 
 ## Para qué sirven
-- **Feedback rápido.** Sabes en segundos si un cambio rompió algo, no días después por un reporte de un usuario.
+- **Respuesta rápida.** Sabes en segundos si un cambio rompió algo, no días después por un reporte de un usuario.
 - **Cambiar sin miedo.** Con una buena red de pruebas puedes reorganizar el código (refactorizar) y comprobar que todo sigue funcionando.
 - **Documentación que no miente.** Una prueba muestra cómo se usa el código y qué se espera de él, y si queda desactualizada, falla.
 - **Mejor diseño.** El código difícil de probar suele estar demasiado acoplado (hace muchas cosas, depende de todo). Escribir la prueba lo revela temprano.
@@ -22,7 +22,7 @@ No todas las pruebas cuestan lo mismo. Mira cómo cambian la velocidad y el cost
 | **Integración** | Varias piezas juntas o una pieza con algo real (un archivo, una base de datos) | Segundos | Que las piezas no encajan |
 | **Extremo a extremo / aceptación** | El sistema completo, como lo usa una persona (la línea de comandos, la API) | Segundos a minutos | Que algo, en algún lugar, no cumple lo prometido |
 
-La forma de pirámide es una guía, no una ley: muchas pruebas rápidas abajo y pocas lentas arriba. En el proyecto del bloque escribirás de los dos extremos: unitarias para la lógica y de aceptación que ejecutan la línea de comandos como lo haría una persona.
+La forma de pirámide es una guía, no una ley: muchas pruebas rápidas abajo y pocas lentas arriba. En el proyecto del bloque escribirás pruebas de los dos extremos: unitarias para la lógica y de aceptación que ejecutan la línea de comandos como lo haría una persona.
 
 ## Anatomía de una prueba: Arrange, Act, Assert
 Casi toda prueba tiene tres partes: preparar, actuar y comprobar.
@@ -45,13 +45,13 @@ En pytest, una prueba es una función cuyo nombre empieza con `test_`, dentro de
 | **Rápida** | Corre en milisegundos | No la corres seguido, y deja de avisar a tiempo |
 | **Aislada** | No depende de otras pruebas ni de su orden | Falla o pasa según qué corrió antes (lab 1.5) |
 | **Repetible** | Da el mismo resultado hoy, mañana y en otra máquina | No sabes si falló tu código o el reloj, la red o el azar |
-| **Auto-verificable** | Dice sola si pasó o falló, sin que leas nada | Alguien tiene que interpretar la salida, y nadie lo hará |
+| **Autoverificable** | Dice sola si pasó o falló, sin que leas nada | Alguien tiene que interpretar la salida, y nadie lo hará |
 | **Enfocada y legible** | Prueba una idea, y su nombre la dice | Cuando falla, no sabes qué se rompió |
 
 Se suele resumir con la sigla en inglés *FIRST* (Fast, Isolated, Repeatable, Self-validating, Timely); la última significa que la escribes cuando escribes el código, no meses después.
 
 ## La prueba que pasa por la razón equivocada
-Este es el concepto central del camino. Una prueba en verde solo vale si **podía ponerse roja**. Mira este archivo: la función `total` tiene un bug (multiplica por 2), y aun así pytest dice que todo está bien.
+Este es el concepto central del curso. Una prueba en verde solo vale si **podía ponerse roja**. Mira este archivo: la función `total` tiene un bug (multiplica por 2), y aun así pytest dice que todo está bien.
 
 ```python
 def total(prices):
@@ -80,7 +80,7 @@ test_wrong_reason.py::test_runs_but_checks_nothing PASSED                [100%]
 ```
 
 Tres trampas en un solo archivo:
-1. **La prueba que nunca corre.** `check_total` no empieza con `test_`, así que pytest no la recolecta. Fíjate en la salida: solo hay 2 pruebas. Y si un archivo no tiene ninguna, pytest dice `no tests ran` y termina con el código de salida 5.
+1. **La prueba que nunca corre.** `check_total` no empieza con `test_`, así que pytest no la recolecta. Fíjate en la salida: solo hay 2 pruebas. Y si la corrida no recolecta ninguna prueba, pytest dice `no tests ran` y termina con el código de salida 5.
 2. **La prueba que pasa porque no hay nada que revisar.** El `for` sobre una lista vacía no ejecuta ningún `assert`.
 3. **La prueba sin comprobación.** Ejecuta el código pero no verifica nada; solo fallaría si el código lanzara una excepción.
 

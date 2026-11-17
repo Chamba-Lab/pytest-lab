@@ -25,7 +25,7 @@ Get-Location
 | 🔨 **Construir y comparar** | Lee [BRIEF.md](BRIEF.md), constrúyelo a tu manera en tu rama o fork (por ejemplo en `mine/`), pásale las pruebas de `acceptance/` y después lee [REVIEW.md](REVIEW.md) para comparar tu diseño con `reference/` | 4–6 h |
 | 🔍 **Solo revisar** | Corre `reference/`, léela guiado por [REVIEW.md](REVIEW.md), rómpela con la tabla de mutaciones y desafía sus decisiones | 1–2 h |
 
-**Recomendación:** si terminaste los labs 1.2–1.4 sin mirar las soluciones, construye: es donde todo se junta. Si vas justo de tiempo, revisa, pero haz al menos tres filas de "Rómpelo tú".
+**Recomendación:** si terminaste los labs 1.2–1.4 sin mirar las soluciones, construye: es donde todo se junta. Si tienes poco tiempo, revisa, pero haz al menos tres filas de "Rómpelo tú".
 
 ### Correr la referencia
 Dentro de `reference/`:
@@ -89,23 +89,24 @@ python -m pytest
 15 passed
 ```
 
-Contra **tu** implementación, nombra el comando que la arranca en `SPLITBILL_CMD`.
+Contra **tu** implementación, nombra el comando que la arranca en `SPLITBILL_CMD`. Las pruebas se ejecutan desde `acceptance/`, así que **las rutas son relativas a `acceptance/`**. Si tu paquete Python está en `mine/src/splitbill/`, al lado de `acceptance/`:
 
 PowerShell:
 
 ```powershell
-$env:SPLITBILL_CMD = "python -m splitbill"   # con tu paquete importable
+$env:PYTHONPATH = "..\mine\src"
+$env:SPLITBILL_CMD = "python -m splitbill"
 python -m pytest
-Remove-Item Env:SPLITBILL_CMD
+Remove-Item Env:SPLITBILL_CMD, Env:PYTHONPATH
 ```
 
 Bash:
 
 ```bash
-SPLITBILL_CMD="python -m splitbill" python -m pytest
+PYTHONPATH=../mine/src SPLITBILL_CMD="python -m splitbill" python -m pytest
 ```
 
-Funciona con cualquier lenguaje: `SPLITBILL_CMD="node mine/cli.js"` también vale. Las pruebas solo miran la salida, stderr y el código de salida.
+Funciona con cualquier lenguaje: `SPLITBILL_CMD="node ../mine/cli.js"` también vale. Las pruebas solo miran la salida, stderr y el código de salida.
 
 ## 👥 Implementaciones de la comunidad
 ¿Construiste la tuya? Abre un issue con el enlace a tu fork o rama y la agregamos aquí. No se copian dentro de este repositorio: solo se mantiene una referencia.

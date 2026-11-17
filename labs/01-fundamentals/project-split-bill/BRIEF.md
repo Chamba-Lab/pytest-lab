@@ -13,7 +13,7 @@ Un grupo de amigos comparte gastos: una cena, un viaje, un regalo. Cada gasto lo
 |---|---|
 | **Gasto** | Quién pagó (`payer`), cuánto (`amount`) y entre quiénes se reparte (`participants`). Quien paga puede no participar (por ejemplo, un regalo) |
 | **Monto** | Positivo, con punto decimal y como máximo 2 decimales: `12`, `12.5`, `12.50`. Nada de comas, signos ni notación científica |
-| **Reparto** | En partes iguales, **en céntimos**. Los céntimos que no se dividen exacto van de a uno a los participantes **en orden alfabético**: 100,00 entre `ana`, `beto` y `caro` → 33,34 · 33,33 · 33,33 |
+| **Reparto** | En partes iguales, **en céntimos**. Los céntimos que no se dividen exacto van uno por uno a los participantes **en orden alfabético**: 100,00 entre `ana`, `beto` y `caro` → 33,34 · 33,33 · 33,33 |
 | **Saldo** | Lo que una persona pagó menos lo que le toca. Positivo: le deben. Negativo: debe. **La suma de todos los saldos es 0,00 exacto** |
 | **Transferencia** | Quien debe le paga a quien le deben. Juntas llevan todos los saldos a cero, con como mucho (personas − 1) transferencias |
 
@@ -43,7 +43,7 @@ Los participantes van separados por `;`. Los espacios alrededor de nombres y mon
 
 | Comando | Salida (stdout, UTF-8) | Código |
 |---|---|---|
-| `balances <archivo>` | Una línea por persona, ordenadas por nombre: `ana +60.00`, `beto -15.00`, `caro 0.00` (sin signo cuando es cero) | 0 |
+| `balances <archivo>` | Una línea por persona, ordenadas por nombre: `ana +60.00`, `beto -15.00`, `caro -45.00`. Un saldo cero va sin signo: `dani 0.00` | 0 |
 | `settle <archivo>` | Una línea por transferencia: `beto -> ana: 15.00` | 0 |
 
 **Errores:** un archivo inválido o inexistente no imprime nada en stdout, escribe un mensaje en **stderr** que nombra la línea (`line 3: …`) y termina con **código 2**. Un comando desconocido también termina con código 2.
@@ -68,7 +68,7 @@ Cada uno tiene su prueba de caja negra en [`acceptance/test_acceptance.py`](acce
 |---|---|
 | Pruebas unitarias de las reglas de dinero y del reparto, con casos en los límites | [1.2](../02-first-tests/README.md) |
 | Casos de validación parametrizados, con IDs legibles | [1.3](../03-parametrize/README.md) |
-| La CLI probada con archivos temporales (`tmp_path`) y su salida capturada | [1.4](../04-fixtures-doubles/README.md) |
+| La CLI probada con archivos temporales (`tmp_path`) y su salida capturada con `capsys` | [1.4](../04-fixtures-doubles/README.md) |
 | Cobertura de ramas revisada; ninguna rama de las reglas queda sin probar | [1.5](../05-coverage-flaky/README.md) |
 | Ver fallar cada prueba importante al menos una vez | [1.1](../01-why-test/CONCEPT.md) |
 

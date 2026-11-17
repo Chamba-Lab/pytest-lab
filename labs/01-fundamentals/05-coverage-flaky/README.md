@@ -8,7 +8,7 @@
 - Medir la cobertura de líneas y de ramas con pytest-cov y leer el reporte de líneas y ramas faltantes.
 - Explicar por qué un 100% de cobertura no garantiza que las pruebas comprueben algo.
 - Reconocer y reproducir una prueba que depende del orden y otra que depende del azar del hash.
-- Usar `--lf`, `--sw` y `--durations` para trabajar con fallos y pruebas lentas.
+- Usar `--lf` y `--durations` para trabajar con fallos y pruebas lentas (y conocer `--sw`).
 
 ## 💡 Por qué importa
 "Tenemos 100% de cobertura" es una de las frases más tranquilizadoras y más engañosas de un equipo. Y una prueba que falla "a veces" es peor que una que falla siempre: el equipo aprende a reintentarla hasta que pase y deja de creerle a la suite. Este lab te enseña a medir la cobertura con criterio y a cazar la inestabilidad en lugar de reintentar.
@@ -83,7 +83,7 @@ Bash:
 python -m pytest --cov=shipping --cov-report=term-missing
 ```
 
-**Qué deberías ver:**
+<details><summary>👀 Qué deberías ver</summary>
 
 ```text
 Name          Stmts   Miss  Cover   Missing
@@ -92,6 +92,7 @@ TOTAL            14      0   100%
 ```
 
 Todas las líneas se ejecutan. ¿Significa que todo está probado? Los siguientes experimentos responden.
+</details>
 
 ### Experimento 2 · La cobertura de ramas
 🔮 **Predice primero:** si además pides la cobertura de ramas, ¿seguirá en 100%? Si no, ¿qué caso falta?
@@ -100,7 +101,7 @@ Todas las líneas se ejecutan. ¿Significa que todo está probado? Los siguiente
 python -m pytest --cov=shipping --cov-branch --cov-report=term-missing
 ```
 
-**Qué deberías ver:**
+<details><summary>👀 Qué deberías ver</summary>
 
 ```text
 Name          Stmts   Miss Branch BrPart  Cover   Missing
@@ -108,6 +109,7 @@ shipping.py      14      0      8      1    95%   12->14
 ```
 
 `12->14` es un camino que nunca se tomó: de la línea 12 (`if weight_kg > 2:`) directo a la 14. Es decir, el `if` nunca fue falso: **ninguna prueba manda un paquete de 2 kg o menos.** Todas las líneas se ejecutan, pero un caso entero (el más común en la vida real) no está probado.
+</details>
 
 ### Experimento 3 · 100% de cobertura con un bug vivo
 🔮 **Predice primero:** en `shipping.py`, cambia `cost *= 2` por `cost *= 3`, como si el exprés costara el triple por error. ¿Falla alguna prueba? ¿Cambia la cobertura?
@@ -116,7 +118,7 @@ shipping.py      14      0      8      1    95%   12->14
 python -m pytest --cov=shipping --cov-report=term-missing
 ```
 
-**Qué deberías ver:**
+<details><summary>👀 Qué deberías ver</summary>
 
 ```text
 TOTAL            14      0   100%
@@ -124,6 +126,7 @@ TOTAL            14      0   100%
 ```
 
 Todo verde y 100% de cobertura con el bug puesto. La única prueba con exprés es la de un miembro que termina **gratis**: el costo da 0 con `× 2` y con `× 3`, así que la línea se ejecuta pero su efecto nunca se comprueba. Es el mismo problema que la caza de mutantes de los labs 1.2 a 1.4 hace visible.
+</details>
 
 > [!IMPORTANT]
 > **Vuelve a dejar `cost *= 2`** antes de seguir (o `git restore shipping.py`).
@@ -136,7 +139,15 @@ python -m pytest experiments/test_order.py
 python -m pytest experiments/test_order.py -k one_item
 ```
 
-**Qué deberías ver:** juntas, `2 passed`. Sola:
+Después, corre solo lo que falló la última vez:
+
+```powershell
+python -m pytest experiments/test_order.py --lf
+```
+
+<details><summary>👀 Qué deberías ver</summary>
+
+Juntas, `2 passed`. La segunda sola:
 
 ```text
 E       assert 0 == 1
@@ -144,11 +155,7 @@ FAILED experiments/test_order.py::test_the_cart_has_one_item - assert 0 == 1
 ======================= 1 failed, 1 deselected in 0.05s =======================
 ```
 
-Ahora corre solo lo que falló la última vez:
-
-```powershell
-python -m pytest experiments/test_order.py --lf
-```
+Con `--lf`:
 
 ```text
 run-last-failure: rerun previous 1 failure
@@ -156,6 +163,7 @@ FAILED experiments/test_order.py::test_the_cart_has_one_item - assert 0 == 1
 ```
 
 Sola vuelve a fallar: el fallo no es "mala suerte", depende de qué corrió antes. Esa es la pista para buscar estado compartido (una variable de módulo, un archivo, una variable de entorno: recuerda la trampa de `os.environ` del lab 1.4).
+</details>
 
 ### Experimento 5 · El azar del hash
 🔮 **Predice primero:** [`experiments/test_hash_order.py`](demo/experiments/test_hash_order.py) compara `list(set(...))` con una lista fija. Córrela seis veces seguidas. ¿Da siempre lo mismo?
@@ -181,7 +189,9 @@ PYTHONHASHSEED=0 python -m pytest experiments/test_hash_order.py
 PYTHONHASHSEED=2 python -m pytest experiments/test_hash_order.py
 ```
 
-**Qué deberías ver** (con Python 3.12; en otra versión las semillas que fallan pueden ser otras, pero siempre habrá unas que pasan y otras que fallan):
+<details><summary>👀 Qué deberías ver</summary>
+
+Con Python 3.12 (en otra versión las semillas que fallan pueden ser otras, pero siempre habrá unas que pasan y otras que fallan):
 
 ```text
 E         At index 1 diff: 'testing' != 'pytest'
@@ -191,6 +201,7 @@ FAILED experiments/test_hash_order.py::test_unique_tags - AssertionError: ass...
 ```
 
 Sin semilla fija, cada corrida sortea el orden. Fijarla no arregla la prueba: la vuelve **reproducible** para poder estudiarla. El arreglo real es no depender del orden: comparar con `sorted(...)` o con un `set`.
+</details>
 
 ### Experimento 6 · ¿Cuál es la lenta?
 
@@ -215,12 +226,12 @@ Solo aparecen dos aunque pediste tres: pytest esconde las fases que duran menos 
 | `--cov-branch` | Mide también las ramas: cada `if` en sus dos caminos |
 | `12->14` | Un salto de la línea 12 a la 14 que nunca ocurrió |
 | `--lf` (`--last-failed`) | Corre solo lo que falló en la corrida anterior (usa `.pytest_cache`) |
-| `--sw` (`--stepwise`) | Se detiene en el primer fallo y, la próxima vez, sigue desde ahí: arreglas los fallos de a uno |
+| `--sw` (`--stepwise`) | Se detiene en el primer fallo y, la próxima vez, sigue desde ahí: arreglas los fallos uno por uno |
 | `--durations=N` | Lista las N pruebas más lentas |
 
 ## 💼 En proyectos reales
 - **Usa la cobertura para encontrar lo que no se prueba, no como meta.** Una cifra exigida ("80% o no se fusiona") invita a escribir pruebas sin `assert` que suben el número. Mira las líneas y las **ramas** que faltan.
-- **La cobertura de ramas desde el principio:** activarla cuesta un flag y revela casos completos sin probar, como el paquete liviano de esta demo.
+- **La cobertura de ramas desde el principio:** activarla cuesta una opción y revela casos completos sin probar, como el paquete liviano de esta demo.
 - **Una prueba inestable no se reintenta: se aísla y se reproduce.** Córrela sola, en otro orden, con la semilla fija. Cuando falla de forma reproducible, ya es un bug normal.
 - **Las fuentes clásicas de inestabilidad:** estado compartido entre pruebas, la hora real, el orden de `set`/`dict` no ordenados, la red, los hilos y los tiempos de espera fijos (`sleep`). Las fixtures y los dobles del lab 1.4 resuelven la mayoría.
 - **Mide la duración en el CI** (`--durations`) para que la suite no se vuelva lenta sin que nadie lo note.

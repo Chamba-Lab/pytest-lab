@@ -32,7 +32,7 @@ pwd
 ## 🧠 Conceptos
 - **`@pytest.mark.parametrize`:** una función de prueba, muchos casos. Cada caso es una prueba independiente en el reporte.
 - **IDs:** el nombre de cada caso entre corchetes (`test_each_rule[too-short]`). Sin `id=`, pytest los inventa a partir de los datos.
-- **`xfail`:** "se espera que falle" (un bug conocido). Si pasa sin esperarlo, es un **XPASS**. Con `strict`, un XPASS hace fallar la suite.
+- **`skip` frente a `xfail`:** `skip` no ejecuta la prueba (no aplica aquí: otra plataforma, una dependencia que falta). `xfail` **sí** la ejecuta y espera que falle (un bug conocido). Si pasa sin esperarlo, es un **XPASS**. Con `strict`, un XPASS hace fallar la suite.
 - **Marcas propias:** etiquetas como `@pytest.mark.slow` para elegir qué correr. Con `strict_markers`, una marca no registrada es un error y no un simple aviso.
 - **Configuración nativa (pytest 9):** `[tool.pytest]` en `pyproject.toml` usa tipos TOML reales (listas, booleanos). La tabla antigua `[tool.pytest.ini_options]` trata todo como texto.
 
@@ -94,8 +94,7 @@ python -m pytest tests/test_policy.py --collect-only -q
 
 🔮 **Predice primero:** con el `xfail` tal cual, si mañana alguien arregla el bug, ¿tu suite avisa? Corre la caza y mira qué pasa con `f1`.
 
-> [!WARNING]
-> Un `xfail` que empieza a pasar no hace fallar nada por defecto: solo aparece una `X` en el reporte.
+- [ ] Después de correrla: haz que `f1` muera con `strict=True` en la marca. (La tarea 3 lo vuelve el comportamiento de todo el proyecto con `strict_xfail = true`.)
 
 ### Tarea 3 · Configuración nativa y una marca propia
 **Meta:** pasar la configuración a `[tool.pytest]`, activar las opciones strict y separar las pruebas lentas. **La validan:** `test_configuration_uses_the_native_toml_table`, `test_strict_options_are_on` y `test_slow_marker_is_registered_and_used`.
@@ -216,3 +215,5 @@ La solución completa está en [`solution/`](solution/).
 - ¿Qué entendí?
 - ¿Qué me costó?
 - ¿Qué debería reforzar?
+
+**Siguiente:** [1.4 · Fixtures y dobles de prueba](../04-fixtures-doubles/README.md)
