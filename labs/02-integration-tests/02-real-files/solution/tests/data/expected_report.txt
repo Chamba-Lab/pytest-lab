@@ -1,0 +1,6 @@
+Members by city
+Arequipa: 2
+Cusco: 1
+Huánuco: 1
+Lima: 3
+Total: 7

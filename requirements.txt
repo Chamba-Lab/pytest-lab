@@ -1,3 +1,6 @@
 # Shared by every lab. Versions are pinned and upgraded together (see AGENTS.md).
 pytest==9.2.0
 pytest-cov==7.1.0
+# Block 2: an HTTP client (lab 2.4 and project 2.P) and a local test server for it.
+requests==2.34.2
+pytest-httpserver==1.2.1

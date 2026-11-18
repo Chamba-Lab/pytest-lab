@@ -1,0 +1,5 @@
+# Test dependencies of the reference implementation (requests, its only runtime
+# dependency, is in pyproject.toml).
+pytest==9.2.0
+pytest-httpserver==1.2.1
+requests==2.34.2

@@ -1,0 +1,6 @@
+# pytest configuration for this lab (native TOML table, pytest 9+). No packaging.
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
+strict_markers = true
+strict_xfail = true

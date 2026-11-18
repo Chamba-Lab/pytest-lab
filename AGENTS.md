@@ -11,7 +11,7 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 ## Context
 - **Learner:** knows basic Python (functions, classes, modules) and has written few or no automated tests. Community course of [Chamba Lab](https://chambalab.org), Spanish-speaking.
 - **Goal:** write and maintain automated tests with professional judgment; tests that fail for the right reason.
-- **Stack:** Python 3.12+ (verified on 3.12 and 3.15), pytest 9.2.0, pytest-cov 7.1.0. Versions live in `requirements.txt` and are upgraded together.
+- **Stack:** Python 3.12+ (verified on 3.12 and 3.15), pytest 9.2.0, pytest-cov 7.1.0; block 2 adds requests 2.34.2 and pytest-httpserver 1.2.1 (the elective 2.5 has its own `requirements.txt` with testcontainers). Versions live in `requirements.txt` and are upgraded together.
 - **Learner environment:** Windows first (PowerShell, then Bash); everything must also work on macOS and Linux.
 
 ## Working agreement

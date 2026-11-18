@@ -2,6 +2,13 @@
 
 Solo las que alguien podría deshacer sin saber por qué. Si una cambia, se actualiza su entrada en el mismo commit.
 
+## Plan de los bloques 2 a 4 (18 nov 2026)
+- **Se construye solo el bloque 2.** Los bloques 3 y 4 esperan el primer feedback del bloque 1: copiarán sus patrones (caza de mutantes, formato del README), y un problema de fondo obligaría a rehacer tres bloques en vez de uno.
+- **El 2.2 no vuelve a enseñar `tmp_path`.** Es del 1.5. El 2.2 se queda con lo que solo aparece con archivos reales: datos de prueba guardados junto a las pruebas, archivos esperados (*golden files*) y los saltos de línea y codificaciones de cada sistema.
+- **El cliente HTTP del 2.4 usa requests, no httpx.** httpx no saca versión desde diciembre de 2024 (0.28.1); requests sigue activo. El servidor de prueba es pytest-httpserver: un servidor HTTP real en un puerto local, para que la prueba cruce la red de verdad (un doble del transporte, como respx o responses, sería una prueba unitaria más).
+- **El 2.5 es electivo y necesita Docker; `learner.containers` sigue en `"none"`.** El camino principal no usa contenedores. Las pruebas del 2.5 se saltan solas sin Docker, y sus dependencias van en un `requirements` propio del lab.
+- **El mutation testing del 4.4 usa cosmic-ray, no mutmut.** mutmut 3.8 necesita `fork`, que Windows no tiene (su documentación pide WSL), y el aprendiz de este camino trabaja en Windows. Se confirma corriéndolo al construir el bloque 4.
+
 ## Reconstrucción del bloque 1 (18 nov 2026, StudyForge 1.1)
 - **Se rehízo el bloque 1 con IDs y carpetas nuevas** (`01-fundamentals` → `01-unit-tests`), aunque los IDs se congelan en `built`. La primera revisión, de alguien que conoce testing, encontró un sílabo difícil de leer, conceptos listados sin presentar y un bloque que mezclaba unitarias, aceptación, cobertura e inestabilidad. No había issues de feedback, forks ni labs en `done`, así que el cambio no rompía el trabajo de nadie.
 - **El camino completo tiene cuatro bloques, uno por nivel de la pirámide más la calidad de la suite.** El bloque 1 se queda en las unitarias; integración y aceptación tienen sus bloques. Las pruebas inestables pasaron al 4.1, junto al CI, donde duelen en la práctica.
