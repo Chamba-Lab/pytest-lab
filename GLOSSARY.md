@@ -35,3 +35,9 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Branch coverage (cobertura de ramas) | Si cada decisión (`if`) se recorrió por sus dos caminos | [1.6](labs/01-unit-tests/06-coverage/README.md) |
 | `capsys` | Capturar lo que el código imprime en stdout y stderr | [1.P](labs/01-unit-tests/project-split-bill/BRIEF.md#lo-nuevo-de-este-proyecto) |
 | Factory fixture | Una fixture que devuelve una función, para que cada prueba la llame con sus datos | [1.P](labs/01-unit-tests/project-split-bill/BRIEF.md#lo-nuevo-de-este-proyecto) |
+
+## Bloque 2 · Pruebas de integración
+| Término | Qué es | Se enseña en |
+|---|---|---|
+| Adapter (adaptador) | La pieza pequeña que traduce entre tu código y algo real (un archivo, una base de datos, un servicio); es lo que se prueba con lo real | [2.1](labs/02-integration-tests/01-what-changes/CONCEPT.md) |
+| Setup · Teardown (preparación · limpieza) | Dejar lo real en un estado conocido antes de la prueba, y devolverlo como estaba después, aunque la prueba falle | [2.1](labs/02-integration-tests/01-what-changes/CONCEPT.md) |

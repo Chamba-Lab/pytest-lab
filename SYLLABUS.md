@@ -38,7 +38,7 @@ Probar tu código junto con lo real: archivos, una base de datos y un servicio H
 
 | ID | Tema | Tipo de tema | Tipo de lab | Podrás… | Estado |
 |---|---|---|---|---|---|
-| 2.1 | Qué cambia al integrar | 🎯 `core` | 💭 `concept` | Decidir qué parte de un sistema probar con lo real y cuál con un doble, y mantener cada prueba aislada aunque use algo real | ⬜ `pending` |
+| [2.1](labs/02-integration-tests/01-what-changes/README.md) | Qué cambia al integrar | 🎯 `core` | 💭 `concept` | Decidir qué parte de un sistema probar con lo real y cuál con un doble, y mantener cada prueba aislada aunque use algo real | 🟨 `built` |
 | 2.2 | Archivos reales | 🎯 `core` | 🧩 `challenge` | Probar código que lee y escribe archivos: guardar datos de prueba, comparar lo escrito con un archivo esperado y no caer en las diferencias entre Windows y Linux | ⬜ `pending` |
 | 2.3 | Una base de datos real | 🎯 `core` | 🧩 `challenge` | Probar consultas contra SQLite, preparando la base antes de cada prueba y limpiándola después | ⬜ `pending` |
 | 2.4 | Un servicio HTTP | 🎯 `core` | 🧩 `challenge` | Probar un cliente HTTP contra un servidor de prueba local y simular sus fallas: errores, respuestas lentas y un servicio caído | ⬜ `pending` |
