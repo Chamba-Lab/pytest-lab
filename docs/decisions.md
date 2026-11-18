@@ -18,6 +18,7 @@ Solo las que alguien podría deshacer sin saber por qué. Si una cambia, se actu
 - **Las pruebas de la CLI de la referencia escriben el código de salida como `2`, no como `EXIT_INPUT_ERROR`.** El mutante `m08` (código 1) sobrevivía porque la prueba y la constante cambiaban juntas.
 
 ## Stack y versiones
+- **Cada dependencia fijada pasa por pip-audit en el CI** (`audit.yml`), en cada cambio y cada lunes. Revisa todos los `requirements*.txt` y lo que cada uno instala por debajo. Una dependencia nueva entra solo si también cumple la lista de StudyForge (`references/dependencies.md`): sin vulnerabilidades conocidas, mantenida, con licencia compatible y adoptada por la comunidad.
 - **Python 3.12 o superior, verificado en 3.12 y 3.15.** 3.15 es la estable más reciente (octubre de 2026); 3.12 es lo que muchas máquinas ya tienen. El CI corre ambas para no enseñar nada que dependa de una versión.
 - **pytest 9.2.0 y pytest-cov 7.1.0, fijados en `requirements.txt`.** pytest 9 trae la configuración TOML nativa (`[tool.pytest]`) y las opciones strict, que todos los labs usan desde el 1.3; el 1.4 enseña a registrar marcas en ella.
 - **Solo pytest y pytest-cov.** Nada de plugins extra (por ejemplo, para el orden aleatorio): lo que enseñan se puede mostrar con pytest solo, y cada dependencia es una cosa más que instalar y actualizar.
