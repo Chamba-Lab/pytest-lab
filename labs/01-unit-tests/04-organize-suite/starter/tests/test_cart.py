@@ -1,6 +1,6 @@
 """Tests for adding products to the cart. The tasks are in the README.
 
-These three tests work, but each one repeats the same preparation (task 1).
+These four tests work, but each one repeats the same preparation (task 1).
 """
 
 import pytest

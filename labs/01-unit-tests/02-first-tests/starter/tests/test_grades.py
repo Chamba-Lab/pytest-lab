@@ -1,7 +1,5 @@
 """Your tests for grades.py. Replace each pytest.skip(...) with a real test (see the README)."""
 
-import re
-
 import pytest
 
 from grades import average, passed, ranking

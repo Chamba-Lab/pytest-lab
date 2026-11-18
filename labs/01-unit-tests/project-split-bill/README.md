@@ -16,20 +16,6 @@ Con el entorno virtual activo (el de la raíz del repositorio ya trae pytest y p
 - **La caza que acepta el proyecto:** dentro de `acceptance/`.
 - **La aplicación y la suite de referencia:** dentro de `reference/`.
 
-Comprueba dónde estás:
-
-PowerShell:
-
-```powershell
-Get-Location
-```
-
-Bash:
-
-```bash
-pwd
-```
-
 ## 🛣️ Dos formas de usar este proyecto
 | Camino | Qué haces | Tiempo |
 |---|---|---|
@@ -75,29 +61,13 @@ dani -> ana: 11.08
 Suma los saldos: 51,66 − 40,58 + 13,92 − 25,00 = 0,00.
 
 ### Escribir y correr tu suite
-[`your-suite/`](your-suite/) ya trae su [`pyproject.toml`](your-suite/pyproject.toml), que importa la aplicación desde `../reference/src`, y una primera prueba de ejemplo en [`tests/test_money.py`](your-suite/tests/test_money.py). Dentro de `your-suite/`:
-
-PowerShell:
-
-```powershell
-python -m pytest
-```
-
-Bash:
+[`your-suite/`](your-suite/) ya trae su [`pyproject.toml`](your-suite/pyproject.toml), que importa la aplicación desde `../reference/src`, y una primera prueba de ejemplo en [`tests/test_money.py`](your-suite/tests/test_money.py). Dentro de `your-suite/`, en PowerShell o Bash:
 
 ```bash
 python -m pytest
 ```
 
 Y con la cobertura de ramas (lab 1.6):
-
-PowerShell:
-
-```powershell
-python -m pytest --cov=splitbill --cov-branch --cov-report=term-missing
-```
-
-Bash:
 
 ```bash
 python -m pytest --cov=splitbill --cov-branch --cov-report=term-missing
@@ -135,15 +105,7 @@ Pasa el guardián (tu suite pasa con la aplicación real) y sobreviven los 12 mu
 ```
 
 ### Pasarle la caza a la referencia
-Sin `SPLITBILL_SUITE`, la caza usa `reference/`. Dentro de `acceptance/`:
-
-PowerShell:
-
-```powershell
-python -m pytest
-```
-
-Bash:
+Sin `SPLITBILL_SUITE`, la caza usa `reference/`. Dentro de `acceptance/`, en PowerShell o Bash:
 
 ```bash
 python -m pytest

@@ -14,8 +14,8 @@ Cómo leer la suite de referencia, por qué es como es, y cómo comprobar que ca
 | Una prueba parametrizada por función, con un caso por clase de entrada | Montos válidos e inválidos, repartos exactos y con sobrantes: cada fila es una clase, y su ID dice cuál falló | 1.3 |
 | Los repartos con céntimos sobrantes se prueban en el límite: 1 y 2 céntimos sobrantes, y menos céntimos que personas (`0.02` entre 3) | Es donde viven los errores de redondeo y de «a quién le toca» | 1.3 (valores límite) |
 | La suma de los saldos se comprueba en varios escenarios, no solo el valor de cada saldo | Es la pregunta del dominio, escrita como prueba: vale para cualquier dato | 1.1 (prueba el comportamiento) |
-| Una fixture `csv_file` que devuelve una función para escribir el archivo | Cada prueba de la CLI necesita un CSV distinto; la fixture escribe el encabezado y elige la codificación | 1.4 |
-| `tmp_path` para el archivo y `capsys` para la salida | La CLI se prueba en el mismo proceso, sin ensuciar la carpeta y leyendo stdout y stderr por separado | 1.5 |
+| Una fixture `csv_file` que devuelve una función para escribir el archivo | Cada prueba de la CLI necesita un CSV distinto; la fixture escribe el encabezado y elige la codificación | 1.4 y [BRIEF](BRIEF.md#lo-nuevo-de-este-proyecto) |
+| `tmp_path` para el archivo y `capsys` para la salida | La CLI se prueba en el mismo proceso, sin ensuciar la carpeta y leyendo stdout y stderr por separado | 1.5 (`tmp_path`) y [BRIEF](BRIEF.md#lo-nuevo-de-este-proyecto) (`capsys`) |
 | El código de salida escrito como `2`, no como `EXIT_INPUT_ERROR` | El número es parte del contrato. Una prueba que compara con la misma constante que usa el código cambia junto con ella y no protege nada (mutante `m08`) | 1.1 (la prueba que no puede fallar) |
 
 ## Trampas encontradas al construirla

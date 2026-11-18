@@ -13,27 +13,16 @@
 - Cambiar una variable de entorno solo durante una prueba con `monkeypatch`.
 
 ## 💡 Por qué importa
-Hasta ahora probaste funciones que solo calculan: entran datos y salen datos. El código real hace más: guarda archivos, mira la hora, lee la configuración del entorno y habla con otros sistemas (manda correos, llama a una API). Probarlo tal cual da pruebas lentas, que fallan según el día en que corren y que mandan correos de verdad. Las pruebas unitarias necesitan **aislar** el código de todo eso, y para eso están los dobles de prueba.
+Hasta ahora probaste funciones que solo calculan: entran datos y salen datos. El código real hace más: guarda archivos, mira la hora, lee la configuración del entorno y habla con otros sistemas (manda correos, llama a una API). Probarlo tal cual da pruebas lentas, que fallan según el día en que corren y que mandan correos de verdad. Las pruebas unitarias necesitan **aislar** el código de todo eso.
 
 ## 📍 Dónde correr los comandos
-Con el entorno virtual activo (ver [SETUP.md](../../../SETUP.md)), abre una terminal **dentro de la carpeta `starter/` de este lab**:
-
-PowerShell:
-
-```powershell
-Get-Location
-```
-
-Bash:
-
-```bash
-pwd
-```
+Con el entorno virtual activo, en la carpeta **`starter/`** de este lab.
 
 ## 🧠 Conceptos
 En el [lab 1.4](../04-organize-suite/README.md) usaste fixtures para preparar lo que una prueba necesita. Aquí vas a preparar algo distinto: **reemplazos** de las cosas que tu código no controla.
 
-**Recibir en vez de crear (inyección de dependencias).** Compara estas dos versiones de una función que decide si una tienda está abierta:
+### Recibir en vez de crear (*dependency injection*)
+Compara estas dos versiones de una función que decide si una tienda está abierta:
 
 ```python
 from datetime import datetime
@@ -45,9 +34,10 @@ def is_open_at(clock):                # la recibe
     return 9 <= clock().hour < 18
 ```
 
-¿Cómo pruebas la primera a las 20:00 si corres la suite a las 10:00? No hay forma limpia: la hora real está escondida adentro. La segunda **recibe** el reloj, así que la prueba le pasa uno que diga la hora que haga falta. Diseñar el código para que reciba lo que cambia (la hora, los archivos, los servicios) se llama **inyección de dependencias** (*dependency injection*), y es lo que hace posible el resto de este lab. La clase `Library` de este lab recibe su almacén, su reloj y su notificador.
+¿Cómo pruebas la primera a las 20:00 si corres la suite a las 10:00? No hay forma limpia: la hora real está escondida adentro. La segunda **recibe** el reloj, así que la prueba le pasa uno que diga la hora que haga falta. Diseñar el código para que reciba lo que cambia (la hora, los archivos, los servicios) se llama **inyección de dependencias**, y es lo que hace posible el resto de este lab.
 
-**Dobles de prueba (*test doubles*).** Un doble es un objeto que ocupa el lugar de una dependencia real durante una prueba, como el doble de riesgo que reemplaza al actor en una escena peligrosa. La analogía tiene un límite: el doble de cine imita al actor, y un doble de prueba solo necesita imitar lo poco que la prueba usa. Hay cinco tipos, según lo que hacen:
+### Dobles de prueba (*test doubles*)
+Un doble es un objeto que ocupa el lugar de una dependencia real durante una prueba, como el doble de riesgo que reemplaza al actor en una escena peligrosa. La analogía tiene un límite: el doble de cine imita al actor entero, y un doble de prueba solo necesita imitar lo poco que la prueba usa. Hay cinco tipos:
 
 | Tipo | Qué hace | Ejemplo con un servicio de correo |
 |---|---|---|
@@ -57,19 +47,21 @@ def is_open_at(clock):                # la recibe
 | **Spy** | Funciona como un stub y además **anota** cómo lo llamaron | Un `send` que guarda cada destinatario para revisarlo después |
 | **Mock** | Anota las llamadas y la prueba **comprueba** que fueron las esperadas | «Se llamó a `send` una vez, con `ana` y este mensaje» |
 
-Los dos que más vas a usar son el **fake**, cuando la prueba necesita que la dependencia funcione (un reloj que avanza), y el **mock**, cuando lo que importa es **qué le pidió** tu código a la dependencia (¿a quién avisó?).
+Los dos que más vas a usar son el **fake**, cuando la prueba necesita que la dependencia funcione (un reloj que avanza), y el **mock**, cuando lo que importa es **qué le pidió** tu código a la dependencia.
+
+### Mocks con la forma de la clase real (`create_autospec`)
+Python trae mocks en `unittest.mock`. `create_autospec(Clase, instance=True)` crea uno con la **forma** de la clase real: acepta sus métodos, con sus argumentos, y anota cada llamada para que la prueba la revise.
 
 ```python
-from unittest.mock import Mock
+from unittest.mock import create_autospec
 
-mailer = Mock()                             # un mock: acepta cualquier llamada y la anota
-notify_late_members(mailer)                 # el código bajo prueba lo usa
-mailer.send.assert_called_once_with("ana", "Please return 'Dune'")   # la prueba revisa la llamada
+mailer = create_autospec(Mailer, instance=True)
+notify_late_members(mailer)                                            # el código bajo prueba lo usa
+mailer.send.assert_called_once_with("ana", "Please return 'Dune'")     # la prueba revisa la llamada
 ```
 
-Un `Mock()` así tiene un problema: acepta **cualquier** método, incluso uno que no existe (`mailer.sned(...)`), y la prueba pasa. `create_autospec(Clase, instance=True)` crea un mock con la **forma** de la clase real: solo acepta sus métodos y sus argumentos.
-
-**Lugares reales, pero desechables.** No todo hay que reemplazarlo por un doble. Para los archivos, pytest trae la fixture `tmp_path`: una carpeta temporal nueva para cada prueba (un `pathlib.Path`). El código escribe de verdad, pero en un lugar que nadie más usa. Para las variables de entorno, la fixture `monkeypatch` cambia una variable durante la prueba y **la restaura** al terminar:
+### Lugares reales, pero desechables (`tmp_path` y `monkeypatch`)
+No todo hay que reemplazarlo por un doble. Para los archivos, pytest trae la fixture `tmp_path`: una carpeta temporal nueva para cada prueba (un `pathlib.Path`). El código escribe de verdad, pero en un lugar que nadie más usa. Para las variables de entorno, la fixture `monkeypatch` cambia una variable durante la prueba y **la restaura** al terminar:
 
 ```python
 def test_reads_the_region(monkeypatch):
@@ -77,25 +69,16 @@ def test_reads_the_region(monkeypatch):
     assert current_region() == "lima"
 ```
 
-`monkeypatch` también reemplaza atributos o funciones de un módulo (`monkeypatch.setattr`), pero si el código recibe sus dependencias casi nunca hace falta.
-
-**Capturar lo que se imprime.** Una línea de comandos «responde» imprimiendo en pantalla. La fixture `capsys` captura lo que el código escribe en la salida estándar y en la de errores, para que la prueba lo revise: `capsys.readouterr()` devuelve un objeto con `.out` y `.err`. No la usas en este lab, pero sí en el [proyecto del bloque](../project-split-bill/README.md):
-
-```python
-def test_greets(capsys):
-    print("hola")
-    assert capsys.readouterr().out == "hola\n"
-```
-
 ## 📚 Documentación
 - [Martin Fowler · Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html) y [Test Double](https://martinfowler.com/bliki/TestDouble.html)
 - [pytest · How to use temporary directories and files](https://docs.pytest.org/en/stable/how-to/tmp_path.html)
 - [pytest · How to monkeypatch/mock modules and environments](https://docs.pytest.org/en/stable/how-to/monkeypatch.html)
-- [pytest · How to capture stdout/stderr output](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html)
 - [Python · `unittest.mock`: autospeccing](https://docs.python.org/3/library/unittest.mock.html#autospeccing)
 
 ## 🧭 Escenario
-[`loans.py`](starter/loans.py) ya funciona: los préstamos de una biblioteca. **No lo cambies.**
+
+### El código
+[`loans.py`](starter/loans.py) ya funciona: los préstamos de una biblioteca. **No lo cambies.** `Library` recibe sus tres dependencias, y cada una se reemplaza de una forma distinta:
 
 ```mermaid
 flowchart LR
@@ -104,8 +87,6 @@ flowchart LR
     L --> N[Notifier<br/>send member, message]
     E[LOAN_DAYS<br/>Variable de entorno] -. 14 por defecto .-> L
 ```
-
-`Library` recibe sus tres dependencias: el almacén, el reloj (una función que devuelve «ahora») y el notificador. Cada una se reemplaza de una forma distinta:
 
 | Dependencia | En producción | En tus pruebas |
 |---|---|---|
@@ -121,7 +102,10 @@ flowchart LR
 | `send_reminders()` | Un aviso por préstamo atrasado, con `notifier.send(member, "Please return '<book>'")`; devuelve cuántos envió |
 | `loan_days()` | El plazo: `LOAN_DAYS` del entorno, o 14 |
 
-En [`tests/conftest.py`](starter/tests/conftest.py) ya están la parte de la caza (no la toques) y la clase `FakeClock`. Tus pruebas van en [`tests/test_loans.py`](starter/tests/test_loans.py). La caza es la del [lab 1.2](../02-first-tests/README.md):
+En [`tests/conftest.py`](starter/tests/conftest.py) ya están la parte de la caza y la clase `FakeClock`. Tus pruebas van en [`tests/test_loans.py`](starter/tests/test_loans.py).
+
+### Cómo se revisa tu trabajo
+La caza de mutantes del lab 1.2:
 
 | Mutante | Bug sembrado | Lo mata la tarea |
 |---|---|---|
@@ -135,15 +119,7 @@ En [`tests/conftest.py`](starter/tests/conftest.py) ya están la parte de la caz
 
 ## ✅ Tareas
 
-Corre todo así:
-
-PowerShell:
-
-```powershell
-python -m pytest
-```
-
-Bash:
+Corre todo con este comando, igual en PowerShell o Bash:
 
 ```bash
 python -m pytest
@@ -174,9 +150,9 @@ python -m pytest
 **Meta:** comprobar a quién se avisó, sin enviar nada de verdad. **La validan:** `[m5-reminds-everyone]` y `[m6-calls-a-missing-method]`.
 
 - [ ] Presta `"Dune"` a `"ana"`, avanza 10 días, presta `"Emma"` a `"beto"` y avanza 5 más: el primero está atrasado y el segundo no.
-- [ ] Comprueba que `send_reminders()` devuelve 1 **y** que el notificador recibió exactamente ese aviso: `notifier.send.assert_called_once_with("ana", "Please return 'Dune'")`.
+- [ ] Comprueba que `send_reminders()` devuelve 1 **y** que el notificador recibió exactamente ese aviso, con `assert_called_once_with`.
 
-🔮 **Predict first:** si solo compruebas que `send_reminders()` devuelve 1, ¿qué mutantes sobreviven? ¿Y si además el doble fuera un `Mock()` sin `spec`?
+🔮 **Predict first:** si solo compruebas que `send_reminders()` devuelve 1, ¿qué mutantes sobreviven?
 
 ### Tarea 4 · Variables de entorno con `monkeypatch`
 **Meta:** probar que el plazo se lee del entorno, sin afectar a otras pruebas. **La valida:** `[m7-ignores-the-environment]`.
@@ -191,21 +167,15 @@ python -m pytest
 ## 🔍 Command dissection
 | Código | Qué hace |
 |---|---|
-| `tmp_path` | Fixture de pytest: una carpeta temporal nueva para cada prueba (`pathlib.Path`) |
-| `FakeClock(...)` / `clock.advance(days=14)` | El fake de este lab: un reloj que devuelve una hora fija y avanza cuando se lo pides |
-| `create_autospec(Notifier, instance=True)` | Un mock con la forma de un objeto `Notifier`: solo acepta sus métodos y argumentos |
-| `mock.send.assert_called_once_with(a, b)` | Falla si `send` no se llamó exactamente una vez con esos argumentos |
-| `mock.send.call_args_list` | Todas las llamadas que recibió `send`, por si quieres revisarlas a mano |
-| `monkeypatch.setenv("X", "7")` | Pone `X=7` solo durante la prueba |
+| `mock.send.call_args_list` | Todas las llamadas que recibió `send`, para revisarlas a mano |
 | `monkeypatch.delenv("X", raising=False)` | Quita `X` durante la prueba, sin error si no existía |
-| `capsys.readouterr()` | Lo impreso hasta ahora: `.out` (salida estándar) y `.err` (errores) |
+| `monkeypatch.setattr(objeto, "nombre", valor)` | Reemplaza un atributo o una función durante la prueba |
 
 ## 💼 En proyectos reales
-- **Inyecta lo que cambia** (hora, archivos, red, servicios externos). Si el código crea sus dependencias adentro (`datetime.now()`, `smtplib.SMTP(...)`), tendrás que reemplazar partes de módulos con `monkeypatch.setattr`, y esas pruebas se rompen cuando alguien reorganiza los `import`. Si las recibe, la prueba simplemente le pasa otras.
-- **Prefiere fakes para el comportamiento y mocks para las interacciones.** El `FakeClock` funciona de verdad; el mock del notificador sirve para preguntar «¿a quién avisaste?». Abusar de los mocks ata las pruebas a cómo está escrito el código, no a lo que hace.
-- **Siempre con `spec` o `autospec`.** Un `Mock()` desnudo acepta cualquier método, así que un error de nombre pasa las pruebas y explota en producción.
+- **Inyecta lo que cambia** (hora, archivos, red, servicios). Si el código crea sus dependencias adentro (`datetime.now()`, `smtplib.SMTP(...)`), tendrás que reemplazar partes de módulos con `monkeypatch.setattr`, y esas pruebas se rompen cuando alguien reorganiza los `import`.
+- **Prefiere fakes para el comportamiento y mocks para las interacciones.** Abusar de los mocks ata las pruebas a cómo está escrito el código, no a lo que hace.
 - **No hagas mock de lo que no es tuyo** si puedes evitarlo: en vez de imitar la librería de correo, envuélvela en una clase tuya pequeña (`Notifier`) y haz el doble de esa.
-- **Aísla el entorno de la máquina:** si alguien tiene `LOAN_DAYS` definida en su terminal, las pruebas del plazo de 14 días fallarían solo en su equipo. Una fixture con `autouse=True` y `monkeypatch.delenv("LOAN_DAYS", raising=False)` lo evita.
+- **Aísla el entorno de la máquina:** si alguien tiene `LOAN_DAYS` definida en su terminal, las pruebas del plazo de 14 días fallarían solo en su equipo. Una fixture con `autouse=True` (que se aplica sola a todas las pruebas, sin pedirla) y `monkeypatch.delenv("LOAN_DAYS", raising=False)` lo evita.
 
 ## 🚀 Reto extra
 Escribe un `FakeNotifier` (un fake: guarda los avisos en una lista) y reescribe la prueba de la tarea 3 con él en lugar del mock. ¿Qué mutantes mata? ¿Qué prueba te parece más legible? ¿Y cuál se rompería si `Library` empezara a mandar los avisos en otro orden?
@@ -224,15 +194,15 @@ def store(tmp_path):
     return LoanStore(tmp_path / "loans.json")
 ```
 
-Tarea 3: arma los dos préstamos con 10 días de diferencia y avanza 5 más; así uno tiene 15 días (atrasado) y el otro 5.
+Tarea 3: `notifier.send.assert_called_once_with("ana", "Please return 'Dune'")`.
 </details>
 
 ## ✔️ Respuestas verificadas
 <details><summary>Ábrelas solo después de terminar las tareas</summary>
 
-Las tareas 2 a 4 se ejecutaron con Python 3.12 y pytest 9.2.0; la tarea 1, con Python 3.13. El CI repite todo en 3.12 y 3.15.
+Se ejecutó con pytest 9.2.0; el CI verifica cada lab en Python 3.12 y 3.15.
 
-**Tarea 1.** Con la ruta fija fallan las seis pruebas, desde la primera corrida. Todas usan el mismo archivo, y la prueba anterior ya prestó el libro:
+**Tarea 1.** Con la ruta fija fallan las seis pruebas, desde la primera corrida. `test_a_loan_is_saved_to_the_file` falla porque relee el archivo de `tmp_path`, que el `store` ya no usa. Las demás fallan porque todas comparten el mismo archivo, y una prueba anterior ya prestó el libro:
 
 ```text
 E           ValueError: already lent: Dune
@@ -240,15 +210,15 @@ E           ValueError: already lent: Dune
 
 Además queda un `loans.json` en tu carpeta, así que la siguiente corrida arranca con los préstamos de la anterior. Con `tmp_path`, cada prueba tiene su propia carpeta y no queda nada.
 
-**Tarea 2.** La prueba del último día. Sola, mata a `m3` y a `m4`; la de «un segundo después», sola, no mata a ninguno. Con el reloj falso en el 29 de enero de 2026, el mutante usa la hora real (meses después) y ve un atraso donde no lo hay; un segundo después del plazo, el código real y el mutante dicen lo mismo («atrasado»). Más adelante, la prueba de la tarea 3 también atrapa a `m4`, porque depende del reloj: una suite completa suele matar a un mutante por más de un lado.
+**Tarea 2.** La prueba del último día. Sola, mata a `m3` y a `m4`; la de «un segundo después», sola, no mata a ninguno. El reloj falso está en enero de 2026; el mutante usa la hora real, que es posterior, y ve un atraso donde no lo hay. Un segundo después del plazo, el código real y el mutante dicen lo mismo («atrasado»). La prueba de la tarea 3 también atrapa a `m4`, porque depende del reloj: una suite completa suele matar a un mutante por más de un lado.
 
-**Tarea 3.** Si solo compruebas el número devuelto, `m5-reminds-everyone` sobrevive siempre: devuelve 1 aunque avise a dos personas. Con un `Mock()` sin `spec` también sobrevive `m6-calls-a-missing-method`, porque el mock acepta `send_message` sin quejarse. Con `create_autospec`, `m6` muere:
+**Tarea 3.** Si solo compruebas el número devuelto, `m5-reminds-everyone` sobrevive: devuelve 1 aunque avise a dos personas. Para matarlo hay que preguntarle al doble con `assert_called_once_with`. Y `m6` muere por la forma del mock: `create_autospec` rechaza un método que `Notifier` no tiene.
 
 ```text
 E   AttributeError: Mock object has no attribute 'send_message'
 ```
 
-Para matar a `m5` hace falta preguntarle al doble: `assert_called_once_with`.
+Con un `Mock()` común, sin `spec`, `m6` sobreviviría: acepta cualquier método, y un error de nombre pasaría las pruebas y explotaría en producción.
 
 **Tarea 4.** `os.environ["LOAN_DAYS"] = "7"` deja la variable puesta para todo lo que corre después. En este archivo, la prueba del entorno es la última, así que tus pruebas pasan… pero la caza corre después y sus procesos heredan `LOAN_DAYS=7`. Contra el código real, la prueba del último día falla, el guardián se pone rojo y bloquea a los 7 mutantes:
 
@@ -268,10 +238,5 @@ Y si la prueba del entorno corriera **antes** que las del reloj, rompería direc
 5. Una prueba falla solo en la máquina de una compañera. ¿Qué variables de entorno o archivos revisarías, y cómo lo evitarías en la suite?
 
 La solución completa está en [`solution/`](solution/).
-
-## 🔁 Retrospectiva
-- ¿Qué entendí?
-- ¿Qué me costó?
-- ¿Qué debería reforzar?
 
 **Siguiente:** [1.6 · Cobertura](../06-coverage/README.md)

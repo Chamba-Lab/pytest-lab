@@ -95,9 +95,43 @@ El proyecto se acepta con una **caza de mutantes de toda la aplicación**: [`acc
 | Ver fallar cada prueba importante al menos una vez | [1.1](../01-what-is-a-test/CONCEPT.md) |
 | `assert`, `pytest.raises` con `match`, y `Decimal` comparado exacto (no `approx`) | [1.2](../02-first-tests/README.md) |
 | Casos por clase y en los límites (montos válidos e inválidos, céntimos que sobran), escritos como tablas con `parametrize` e IDs legibles | [1.3](../03-test-case-design/README.md) |
-| Fixtures para lo que se repite (por ejemplo, una que escribe el CSV de prueba), compartidas con `conftest.py` si las usan varios archivos | [1.4](../04-organize-suite/README.md) |
-| La línea de comandos probada con un archivo en `tmp_path` y su salida capturada con `capsys` | [1.5](../05-test-doubles/README.md) |
+| Fixtures para lo que se repite, compartidas con `conftest.py` si las usan varios archivos | [1.4](../04-organize-suite/README.md) |
+| Archivos de prueba en `tmp_path`, nunca en tu carpeta | [1.5](../05-test-doubles/README.md) |
 | Cobertura de ramas revisada: ninguna rama de las reglas sin probar | [1.6](../06-coverage/README.md) |
+
+## Lo nuevo de este proyecto
+Tres herramientas que los labs no usaron y que la línea de comandos necesita.
+
+### Capturar lo que se imprime (`capsys`)
+`main()` responde imprimiendo: la salida normal en stdout y los errores en stderr. La fixture `capsys` de pytest captura las dos, y `capsys.readouterr()` devuelve lo impreso hasta ese momento, con `.out` y `.err` por separado:
+
+```python
+def test_greets(capsys):
+    print("hola")
+    assert capsys.readouterr().out == "hola\n"
+```
+
+### Una fixture que devuelve una función (*factory fixture*)
+Cada prueba de la línea de comandos necesita un CSV distinto. Una fixture puede devolver una **función** que la prueba llama con sus propios datos:
+
+```python
+@pytest.fixture
+def greeting_file(tmp_path):
+    def write(text):
+        path = tmp_path / "greeting.txt"
+        path.write_text(text, encoding="utf-8")
+        return path
+
+    return write
+
+
+def test_reads_the_greeting(greeting_file):
+    path = greeting_file("hola")
+    assert path.read_text(encoding="utf-8") == "hola"
+```
+
+### Un archivo como lo guarda Excel (BOM)
+Excel guarda los CSV en UTF-8 con un **BOM** (*byte order mark*): tres bytes invisibles al inicio del archivo. Para escribir uno así en una prueba, usa la codificación `utf-8-sig`: `path.write_text(texto, encoding="utf-8-sig")`.
 
 ## Fijo y libre
 - **Fijo:** la aplicación (no la cambies), Python 3.12+ y pytest. La caza solo mira si tu suite pasa con la aplicación real y falla con cada mutante.
