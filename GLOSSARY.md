@@ -41,3 +41,7 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 |---|---|---|
 | Adapter (adaptador) | La pieza pequeña que traduce entre tu código y algo real (un archivo, una base de datos, un servicio); es lo que se prueba con lo real | [2.1](labs/02-integration-tests/01-what-changes/CONCEPT.md) |
 | Setup · Teardown (preparación · limpieza) | Dejar lo real en un estado conocido antes de la prueba, y devolverlo como estaba después, aunque la prueba falle | [2.1](labs/02-integration-tests/01-what-changes/CONCEPT.md) |
+| Test data (datos de prueba) | Archivos de ejemplo guardados junto a las pruebas, que las pruebas encuentran con `Path(__file__).parent` | [2.2](labs/02-integration-tests/02-real-files/README.md) |
+| Golden file (archivo esperado) | El resultado correcto guardado como archivo y revisado a mano; la prueba compara contra él. La técnica se llama *snapshot* o *approval testing* | [2.2](labs/02-integration-tests/02-real-files/README.md) |
+| Encoding (codificación) | La regla que convierte texto en bytes y bytes en texto, como UTF-8 | [2.2](labs/02-integration-tests/02-real-files/README.md) |
+| Universal newlines | Al leer en modo texto, Python convierte `\r\n` y `\r` en `\n` | [2.2](labs/02-integration-tests/02-real-files/README.md) |
