@@ -80,12 +80,12 @@ Mantener una suite confiable en equipo.
 | ID | Dueño de | Se apoya en | Parte de |
 |---|---|---|---|
 | 1.1 | Qué es una prueba, los niveles de la pirámide, Arrange-Act-Assert, las propiedades de una buena prueba, la prueba que no puede fallar, qué es un mutante | — | Nada: solo `CONCEPT.md` |
-| 1.2 | Descubrimiento de pruebas, `assert` y su introspección, `pytest.approx`, `pytest.raises`, leer un fallo, `-k` / `-x` / `-v`, la caza de mutantes | 1.1 | Módulo `grades.py` terminado |
+| 1.2 | Descubrimiento de pruebas, `assert` y su introspección, `pytest.approx` y `Decimal`, `pytest.raises`, leer un fallo, `-k` / `-x` / `-v`, la caza de mutantes | 1.1 | Módulo `grades.py` terminado |
 | 1.3 | Clases de equivalencia, valores límite, un caso por razón de fallo, `parametrize` e `ids` | 1.2 | Módulo `passwords.py` terminado |
 | 1.4 | Fixtures, fixtures que usan fixtures, `scope`, `conftest.py`, marcas propias, `-m`, `markers` en la configuración | 1.2, 1.3 | Módulo `cart.py` terminado |
 | 1.5 | Inyección de dependencias, dummy / stub / fake / spy / mock, `tmp_path`, `create_autospec`, `monkeypatch` | 1.4 | Módulo `loans.py` terminado |
 | 1.6 | Cobertura de líneas y de ramas, pytest-cov, los límites de la cobertura | 1.2, 1.3 | `demo/` terminado |
-| 1.P | — | 1.1–1.6 | La aplicación `splitbill` terminada; la suite, desde cero |
+| 1.P | `capsys`, fixtures que devuelven una función, archivos con BOM | 1.1–1.6 | La aplicación `splitbill` terminada; la suite, desde cero |
 
 ## Notas para los siguientes labs
 - El entorno es único (`.venv` en la raíz, `requirements.txt`). Cada variante tiene su `pyproject.toml` con `[tool.pytest]` y `pythonpath = ["."]`.

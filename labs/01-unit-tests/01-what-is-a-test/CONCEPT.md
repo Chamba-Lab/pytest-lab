@@ -117,7 +117,7 @@ Desde el lab 1.2, tus pruebas se validan así, con una **caza de mutantes**: deb
 - **Prueba el comportamiento, no los detalles internos.** «Con 100 de compra hay descuento» es comportamiento; «la función llama a `_apply_rule` dos veces» es un detalle que puede cambiar sin que nada se rompa.
 - **Prueba los límites y los errores.** Los bugs viven en los bordes (cero, vacío, el valor exacto de un umbral) y en las entradas inválidas. Cómo elegir esos casos es el tema del lab 1.3.
 - **No pruebes lo que no es tuyo.** No hace falta comprobar que `sorted` de Python ordena; sí que tu código lo usa bien.
-- **La cobertura no es la meta.** Que una línea se ejecute en una prueba no significa que se compruebe (lo verás en el lab 1.6).
+- **Mide tu suite con criterio.** La cobertura, la métrica más común sobre pruebas, la verás en el lab 1.6.
 
 ## Fuentes
 - [Martin Fowler · TestPyramid](https://martinfowler.com/bliki/TestPyramid.html): el origen y los matices de la pirámide.

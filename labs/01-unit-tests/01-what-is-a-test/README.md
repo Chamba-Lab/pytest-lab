@@ -12,7 +12,7 @@
 - Explicar qué es un mutante y por qué una buena suite lo mata.
 
 ## 💡 Por qué importa
-Escribir pruebas es fácil; escribir pruebas que **atrapen bugs** no lo es. Una suite llena de pruebas que no pueden fallar da una tranquilidad falsa: el CI está en verde y el bug llega igual a producción. Este lab no tiene código para correr: te da el vocabulario y el criterio que vas a usar en todos los demás, y el mapa de hacia dónde va el camino.
+Escribir pruebas es fácil; escribir pruebas que **atrapen bugs** no lo es. Una suite llena de pruebas que no pueden fallar da una tranquilidad falsa: el CI (*continuous integration*, el servidor que corre las pruebas en cada cambio) está en verde y el bug llega igual a producción. Este lab no tiene código para correr: te da el vocabulario y el criterio que vas a usar en todos los demás, y el mapa de hacia dónde va el camino.
 
 ## 🧠 Conceptos
 Lee **[CONCEPT.md](CONCEPT.md)**. Empieza por un problema (probar a mano no escala) y desde ahí cubre:
@@ -23,7 +23,7 @@ Lee **[CONCEPT.md](CONCEPT.md)**. Empieza por un problema (probar a mano no esca
 - **La prueba que pasa por la razón equivocada**, y los mutantes que la delatan.
 - Qué probar y qué no.
 
-Los términos del oficio quedan en inglés, con su traducción la primera vez: así los vas a encontrar en la documentación y en un equipo. Están reunidos en el [glosario](../../../GLOSSARY.md).
+Los términos del oficio están reunidos en el [glosario](../../../GLOSSARY.md).
 
 ## 📚 Documentación
 - [pytest · Get Started](https://docs.pytest.org/en/stable/getting-started.html)

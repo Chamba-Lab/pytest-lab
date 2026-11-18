@@ -12,10 +12,12 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Acceptance / end-to-end test (prueba de aceptación) | Prueba del sistema completo, como lo usa una persona | [1.1](labs/01-unit-tests/01-what-is-a-test/CONCEPT.md) |
 | Test pyramid (pirámide de pruebas) | La recomendación de tener muchas pruebas unitarias y pocas de extremo a extremo | [1.1](labs/01-unit-tests/01-what-is-a-test/CONCEPT.md) |
 | Arrange, Act, Assert (AAA) | Las tres partes de una prueba: preparar, actuar y comprobar | [1.1](labs/01-unit-tests/01-what-is-a-test/CONCEPT.md) |
+| CI (*continuous integration*) | El servidor que corre las pruebas en cada cambio que alguien sube | [1.1](labs/01-unit-tests/01-what-is-a-test/README.md) |
 | Mutant (mutante) | Una copia del código con un bug pequeño sembrado; una buena suite lo «mata» (falla contra él) | [1.1](labs/01-unit-tests/01-what-is-a-test/CONCEPT.md) |
 | Test discovery / collection (recolección) | Cómo pytest encuentra las pruebas: archivos y funciones que empiezan con `test_` | [1.2](labs/01-unit-tests/02-first-tests/README.md) |
 | Assertion introspection | Cuando un `assert` falla, pytest muestra los valores de cada lado | [1.2](labs/01-unit-tests/02-first-tests/README.md) |
 | `pytest.approx` | Comparar decimales con una tolerancia | [1.2](labs/01-unit-tests/02-first-tests/README.md) |
+| `Decimal` | El tipo de Python para decimales exactos, como el dinero | [1.2](labs/01-unit-tests/02-first-tests/README.md) |
 | `pytest.raises` | Comprobar que el código lanza una excepción, y su mensaje | [1.2](labs/01-unit-tests/02-first-tests/README.md) |
 | Equivalence partitioning (clases de equivalencia) | Agrupar las entradas que el código trata igual y probar un representativo de cada grupo | [1.3](labs/01-unit-tests/03-test-case-design/README.md) |
 | Boundary value analysis (valores límite) | Probar el valor exacto de un límite y el de al lado | [1.3](labs/01-unit-tests/03-test-case-design/README.md) |
@@ -28,6 +30,8 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Test double (doble de prueba) | Un objeto que reemplaza a una dependencia real durante una prueba | [1.5](labs/01-unit-tests/05-test-doubles/README.md) |
 | Dummy · Stub · Fake · Spy · Mock | Los cinco tipos de dobles: ocupa un lugar · responde fijo · funciona simple · anota · comprueba las llamadas | [1.5](labs/01-unit-tests/05-test-doubles/README.md) |
 | `monkeypatch` | Cambiar una variable de entorno o un atributo durante una prueba y restaurarlo al final | [1.5](labs/01-unit-tests/05-test-doubles/README.md) |
-| `tmp_path` · `capsys` | Una carpeta temporal por prueba · capturar lo que el código imprime | [1.5](labs/01-unit-tests/05-test-doubles/README.md) |
+| `tmp_path` | Una carpeta temporal nueva para cada prueba | [1.5](labs/01-unit-tests/05-test-doubles/README.md) |
 | Line coverage (cobertura de líneas) | Qué porcentaje de las líneas ejecutaron las pruebas | [1.6](labs/01-unit-tests/06-coverage/README.md) |
 | Branch coverage (cobertura de ramas) | Si cada decisión (`if`) se recorrió por sus dos caminos | [1.6](labs/01-unit-tests/06-coverage/README.md) |
+| `capsys` | Capturar lo que el código imprime en stdout y stderr | [1.P](labs/01-unit-tests/project-split-bill/BRIEF.md#lo-nuevo-de-este-proyecto) |
+| Factory fixture | Una fixture que devuelve una función, para que cada prueba la llame con sus datos | [1.P](labs/01-unit-tests/project-split-bill/BRIEF.md#lo-nuevo-de-este-proyecto) |

@@ -2,3 +2,5 @@
 [tool.pytest]
 testpaths = ["tests"]
 pythonpath = ["."]
+strict_markers = true
+strict_xfail = true

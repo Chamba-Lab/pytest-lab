@@ -12,27 +12,16 @@
 - Marcar pruebas (por ejemplo, las lentas) y elegir cuáles correr con `-m`.
 
 ## 💡 Por qué importa
-En los labs anteriores cada prueba era corta y se preparaba sola. En un proyecto real, una suite tiene cientos de pruebas repartidas en muchos archivos, y casi todas empiezan igual: crear los mismos objetos, con los mismos datos. Si esa preparación se copia en cada prueba, un cambio en el constructor obliga a tocar cien lugares. Además, no todas las pruebas cuestan lo mismo: si las lentas corren en cada cambio, el equipo deja de correr la suite. Organizar la suite es lo que la mantiene usable cuando crece.
+En los labs anteriores cada prueba era corta y se preparaba sola. En un proyecto real, una suite tiene cientos de pruebas repartidas en muchos archivos, y casi todas empiezan igual: crear los mismos objetos, con los mismos datos. Si esa preparación se copia en cada prueba, un cambio en el constructor obliga a tocar cien lugares. Y si las pruebas lentas corren en cada cambio, el equipo deja de correr la suite.
 
 ## 📍 Dónde correr los comandos
-Con el entorno virtual activo (ver [SETUP.md](../../../SETUP.md)), abre una terminal **dentro de la carpeta `starter/` de este lab**:
-
-PowerShell:
-
-```powershell
-Get-Location
-```
-
-Bash:
-
-```bash
-pwd
-```
+Con el entorno virtual activo, en la carpeta **`starter/`** de este lab.
 
 ## 🧠 Conceptos
-En el [lab 1.1](../01-what-is-a-test/CONCEPT.md) viste que casi toda prueba tiene tres partes: preparar (*Arrange*), actuar (*Act*) y comprobar (*Assert*). Este lab trata de la primera: cómo escribir la preparación una vez y reutilizarla.
+En el [lab 1.1](../01-what-is-a-test/CONCEPT.md#anatomía-de-una-prueba-arrange-act-assert) viste que casi toda prueba tiene tres partes: preparar (*Arrange*), actuar (*Act*) y comprobar (*Assert*). Este lab trata de la primera: cómo escribir la preparación una vez y reutilizarla.
 
-**La preparación compartida (*fixture*).** Mira estas dos pruebas de un inventario:
+### La preparación compartida (*fixture*)
+Mira estas dos pruebas de un inventario:
 
 ```python
 def test_a_new_item_starts_at_zero():
@@ -60,14 +49,13 @@ def test_a_new_item_starts_at_zero(inventory):     # pytest llama a inventory() 
     assert inventory.count("pen") == 0
 
 
-def test_receiving_adds_stock(inventory):           # cada prueba recibe uno nuevo
+def test_receiving_adds_stock(inventory):
     inventory.receive("pen", 5)
     assert inventory.count("pen") == 5
 ```
 
-Nadie llama a `inventory()` a mano: pytest ve el parámetro, busca una fixture con ese nombre y la ejecuta antes de la prueba.
-
-**Una fixture que usa otra.** Una fixture también puede pedir fixtures, con el mismo mecanismo: los parámetros. Así se arman escenarios por capas, cada uno sobre el anterior:
+### Una fixture que usa otra
+Una fixture también puede pedir fixtures, con el mismo mecanismo: los parámetros. Así se arman escenarios por capas:
 
 ```python
 @pytest.fixture
@@ -86,11 +74,19 @@ def stocked_inventory(inventory):      # un escenario más completo, sobre el an
     return inventory
 ```
 
-**Cuánto vive una fixture (*scope*).** Por defecto, pytest crea la fixture de nuevo **para cada prueba**: es el `scope` de función. Así, lo que una prueba cambia no lo ve la siguiente. Puedes pedir que viva más (`@pytest.fixture(scope="module")`, una sola vez por archivo, o `"session"`, una vez para toda la corrida), y entonces las pruebas **comparten el mismo objeto**. Eso conviene para algo caro de crear y que nadie modifica; para algo que las pruebas cambian, es una trampa, como verás en la tarea 2.
+### Cuánto vive una fixture (*scope*)
+Por defecto, pytest crea la fixture de nuevo **para cada prueba**: es el `scope` de función. Se puede pedir que viva más con `@pytest.fixture(scope="module")` (una vez por archivo) o `scope="session"` (una vez por corrida); entonces las pruebas de ese alcance reciben el mismo objeto.
 
-**Fixtures para todos los archivos (`conftest.py`).** Una fixture definida dentro de `test_a.py` solo existe para las pruebas de `test_a.py`. Cuando varios archivos necesitan la misma, se pone en un archivo especial, `conftest.py`, en la carpeta de las pruebas. pytest lo carga solo, sin `import`, y sus fixtures quedan disponibles para todos los archivos de esa carpeta.
+### Fixtures para varios archivos (`conftest.py`)
+Las fixtures que se escriben en un archivo especial, `conftest.py`, dentro de la carpeta de las pruebas, quedan disponibles para todos los archivos de pruebas de esa carpeta. pytest lo carga solo, sin `import`.
 
-**Marcas (*markers*) para elegir qué correr.** Algunas pruebas son lentas (en un proyecto real, las que tocan una base de datos o la red). La idea es ponerles una etiqueta y decidir en cada corrida si entran o no: todas en el CI, solo las rápidas mientras programas. En pytest la etiqueta es una **marca**: `@pytest.mark.slow` sobre la prueba, y `-m "not slow"` al correr para dejarlas fuera. Las marcas propias se **registran** en la configuración, con una línea que dice qué significan. Desde el [lab 1.3](../03-test-case-design/README.md) la configuración de cada lab tiene `strict_markers = true`: con esa opción, usar una marca que no está registrada es un error, y así un error de tipeo (`@pytest.mark.slwo`) no pasa inadvertido.
+### Marcas (*markers*)
+Una marca es una etiqueta sobre una prueba, por ejemplo `@pytest.mark.slow`, y `-m` elige qué pruebas correr según sus marcas: `-m "not slow"` deja fuera las marcadas. Las marcas propias se **registran** en la configuración, con una línea que dice qué significan:
+
+```toml
+[tool.pytest]
+markers = ["slow: tests that take long"]
+```
 
 ## 📚 Documentación
 - [pytest · How to use fixtures](https://docs.pytest.org/en/stable/how-to/fixtures.html)
@@ -99,6 +95,8 @@ def stocked_inventory(inventory):      # un escenario más completo, sobre el an
 - [pytest · How to mark test functions with attributes](https://docs.pytest.org/en/stable/how-to/mark.html)
 
 ## 🧭 Escenario
+
+### El código
 [`cart.py`](starter/cart.py) ya funciona: un carrito de compras con precios en céntimos (2500 son 25,00). **No lo cambies.**
 
 | Clase o método | Promete |
@@ -113,29 +111,24 @@ Las pruebas están en dos archivos:
 - [`tests/test_cart.py`](starter/tests/test_cart.py): cuatro pruebas que **ya funcionan**, pero cada una arma su propio catálogo y su propio carrito.
 - [`tests/test_discount.py`](starter/tests/test_discount.py): tres pruebas del descuento por escribir.
 
-[`tests/conftest.py`](starter/tests/conftest.py) solo trae la parte de la caza; las fixtures las escribes tú. La caza de mutantes es la del [lab 1.2](../02-first-tests/README.md), y además [`tests/test_structure.py`](starter/tests/test_structure.py) revisa la organización: dónde viven las fixtures y qué marcas hay.
+[`tests/conftest.py`](starter/tests/conftest.py) solo trae la parte de la caza.
+
+### Cómo se revisa tu trabajo
+La caza de mutantes del lab 1.2 y [`tests/test_structure.py`](starter/tests/test_structure.py), que revisa la organización: dónde viven las fixtures y qué marcas hay.
 
 | Mutante | Bug sembrado | Lo mata |
 |---|---|---|
-| `m1-adding-replaces` | Agregar un producto que ya estaba reemplaza la cantidad en vez de sumarla | Ya muerto: las pruebas de `test_cart.py` que vienen escritas |
-| `m2-unknown-product-accepted` | Acepta productos que no están en el catálogo | Ya muerto: las pruebas que vienen escritas |
+| `m1-adding-replaces` | Agregar un producto que ya estaba reemplaza la cantidad en vez de sumarla | Ya muerto |
+| `m2-unknown-product-accepted` | Acepta productos que no están en el catálogo | Ya muerto |
 | `m3-discount-above-100` | El descuento empieza **después** de 100,00 (`>` en vez de `>=`) | Tarea 2 |
 | `m4-discount-for-everyone` | Todos los carritos tienen descuento | Tarea 2 |
 | `m5-fixed-discount` | El descuento siempre es 10,00, sea cual sea el subtotal | Tarea 2 |
 
-`m1` y `m2` ya están muertos al empezar: las pruebas que vienen escritas los atrapan. Sirven de **guardianes**: mientras reorganizas esas pruebas en la tarea 1, deben seguir muertos. Si uno revive, tu cambio rompió una prueba.
+`m1` y `m2` ya los matan las pruebas que vienen escritas: son **guardianes**. Mientras reorganizas esas pruebas, deben seguir muertos; si uno revive, tu cambio rompió una prueba.
 
 ## ✅ Tareas
 
-Corre todo así:
-
-PowerShell:
-
-```powershell
-python -m pytest
-```
-
-Bash:
+Corre todo con este comando, igual en PowerShell o Bash:
 
 ```bash
 python -m pytest
@@ -151,14 +144,14 @@ python -m pytest
 ### Tarea 2 · Una fixture sobre otra, compartida
 **Meta:** probar el descuento desde un escenario preparado, y compartir las fixtures entre los dos archivos. **La validan:** [`test_the_fixtures_are_shared_from_conftest`](starter/tests/test_structure.py) y la caza de `m3`, `m4` y `m5`.
 
-- [ ] Escribe una fixture `almost_discount` que pida `cart`, le agregue un `"voucher"` (99,99) y lo devuelva: un carrito a un céntimo del descuento.
-- [ ] En `test_discount.py`, escribe las dos pruebas del límite pidiendo `almost_discount`: tal cual paga 9999 céntimos; con un `"sticker"` más (0,01), paga 9000.
+- [ ] Escribe una fixture `almost_discount` en `test_discount.py` que pida `cart`, le agregue un `"voucher"` (99,99) y lo devuelva: un carrito a un céntimo del descuento.
+- [ ] Escribe las dos pruebas del límite pidiendo `almost_discount`: tal cual paga 9999 céntimos; con un `"sticker"` más (0,01), paga 9000.
 
-🔮 **Predict first:** si dejas `catalog` y `cart` en `test_cart.py` y escribes `almost_discount` en `test_discount.py`, ¿puede `almost_discount` pedir `cart`? Pruébalo antes de seguir.
+🔮 **Predict first:** `catalog` y `cart` siguen en `test_cart.py`. ¿Funcionan las pruebas de `test_discount.py`? Córrelas antes de seguir.
 
 - [ ] Mueve las tres fixtures (y `PRICES`) a `tests/conftest.py`, debajo de la parte de la caza.
 
-🔮 **Predict first:** con tus dos pruebas del límite, ¿muere `m5-fixed-discount`, el que siempre descuenta 10,00? Corre la caza y compruébalo.
+🔮 **Predict first:** con tus dos pruebas del límite, ¿muere `m5-fixed-discount`, el que siempre descuenta 10,00?
 
 - [ ] Escribe la tercera prueba, `test_the_discount_is_10_percent_of_any_subtotal`, con un subtotal lejos del límite (por ejemplo, dos vouchers) y su descuento exacto.
 
@@ -167,21 +160,13 @@ python -m pytest
 ### Tarea 3 · Marcar la prueba lenta
 **Meta:** que la prueba lenta tenga su marca y que puedas dejarla fuera. **La validan:** [`test_the_slow_marker_is_registered`](starter/tests/test_structure.py) y `test_the_slow_test_is_marked`.
 
-🔮 **Predict first:** antes de tocar nada, ¿qué pasa si corres solo las rápidas con `-m "not slow"`, cuando ninguna prueba tiene esa marca todavía?
-
-PowerShell:
-
-```powershell
-python -m pytest tests/test_cart.py tests/test_discount.py -m "not slow"
-```
-
-Bash:
+🔮 **Predict first:** la configuración de estos labs trae `strict_markers = true`. ¿Qué pasa si corres solo las rápidas con `-m "not slow"` cuando la marca no está registrada? ¿Y si marcas la prueba sin registrarla? Pruébalo (PowerShell o Bash):
 
 ```bash
 python -m pytest tests/test_cart.py tests/test_discount.py -m "not slow"
 ```
 
-- [ ] Marca `test_many_additions_add_up` con `@pytest.mark.slow` y corre la suite. ¿Qué dice pytest?
+- [ ] Marca `test_many_additions_add_up` con `@pytest.mark.slow`.
 - [ ] Registra la marca en [`pyproject.toml`](starter/pyproject.toml), dentro de `[tool.pytest]`: `markers = ["slow: tests that take long; skip them with -m \"not slow\""]`.
 - [ ] Vuelve a correr el comando de arriba: ahora la prueba lenta queda fuera.
 
@@ -190,23 +175,17 @@ python -m pytest tests/test_cart.py tests/test_discount.py -m "not slow"
 ## 🔍 Command dissection
 | Comando o código | Qué hace |
 |---|---|
-| `@pytest.fixture` | Convierte la función en una fixture; su nombre es el que piden las pruebas |
-| `def test_x(cart):` | La prueba pide la fixture `cart`: pytest la ejecuta y pasa el resultado |
-| `def cart(catalog):` | Una fixture que pide otra; pytest resuelve el orden solo |
-| `@pytest.fixture(scope="module")` | Una sola instancia por archivo, compartida (con su estado) por todas sus pruebas |
-| `tests/conftest.py` | Fixtures disponibles para todos los archivos de `tests/`, sin `import` |
-| `@pytest.mark.slow` | Pone la marca `slow` a una prueba |
-| `markers = ["slow: …"]` | Registra la marca en `[tool.pytest]`, con su descripción |
-| `-m "not slow"` | Corre solo las pruebas **sin** la marca; acepta `and`, `or` y `not` |
+| `@pytest.fixture(scope="module")` | Una sola instancia por archivo; `"session"`, una por corrida. Por defecto, `"function"` |
+| `-m "not slow"` | Elige por marcas; acepta `and`, `or` y `not` |
 | `--fixtures` | Lista las fixtures disponibles y dónde están definidas |
+| `--lf` (*last failed*) | Corre solo lo que falló la vez anterior |
 
 ## 💼 En proyectos reales
-- **Fixtures pequeñas que se combinan** valen más que una gigante que arma todo. `cart` sobre `catalog`, y `almost_discount` sobre `cart`: cada prueba pide exactamente el escenario que necesita.
-- **Nombra la fixture por el escenario, no por cómo se construye:** `almost_discount` dice para qué sirve; `cart_with_voucher_1` obliga a leerla.
-- **`scope` más amplio solo para lo caro y que nadie modifica:** una conexión a una base de datos de prueba, un servidor levantado una vez. Lo que las pruebas cambian, por función.
-- **Un `conftest.py` por carpeta.** En suites grandes hay uno en la raíz de `tests/` con lo común y otros en subcarpetas con lo específico.
-- **Las pruebas lentas, marcadas desde el día uno.** En tu máquina corres `-m "not slow"` en cada cambio; el CI corre todo. Así nadie deja de correr la suite por impaciencia.
-- **Dos herramientas que se ven en el trabajo:** `--lf` (*last failed*) corre solo lo que falló la vez anterior, y `@pytest.mark.xfail(reason="…", strict=True)` registra un bug conocido sin romper la suite y avisa cuando alguien lo arregla. La configuración de estos labs ya trae `strict_xfail = true`.
+- **Fixtures pequeñas que se combinan** valen más que una gigante que arma todo: cada prueba pide exactamente el escenario que necesita. Nómbralas por el escenario (`almost_discount`), no por cómo se construyen.
+- **`scope` amplio solo para lo caro y que nadie modifica:** una conexión a una base de datos de prueba, un servidor levantado una vez.
+- **Un `conftest.py` por carpeta:** en suites grandes hay uno en la raíz de `tests/` con lo común y otros en subcarpetas con lo específico.
+- **En tu máquina, `-m "not slow"` en cada cambio; en el CI, todo.** Así nadie deja de correr la suite por impaciencia.
+- **Bugs conocidos:** `@pytest.mark.xfail(reason="…", strict=True)` registra una prueba que se espera que falle (un bug que aún no se arregla) sin romper la suite, y con `strict` avisa cuando alguien lo arregla. La configuración de estos labs trae `strict_xfail = true`.
 
 ## 🚀 Reto extra
 Escribe una fixture `discounted_cart` que pida `almost_discount` y le agregue el `"sticker"`, y reescribe con ella la prueba del límite. Después mira la lista de fixtures con su origen (`python -m pytest --fixtures tests/test_discount.py`) y encuentra las tuyas al final.
@@ -221,11 +200,6 @@ Una fixture es una función que devuelve lo que la prueba necesita. Si necesita 
 
 ```python
 @pytest.fixture
-def cart(catalog):
-    return Cart(catalog)
-
-
-@pytest.fixture
 def almost_discount(cart):
     cart.add("voucher")
     return cart
@@ -237,16 +211,16 @@ Dos vouchers suman 19998 céntimos; el 10% redondeado hacia abajo es 1999.
 ## ✔️ Respuestas verificadas
 <details><summary>Ábrelas solo después de terminar las tareas</summary>
 
-Todo esto se ejecutó con Python 3.13 y pytest 9.2.0; el CI lo repite en 3.12 y 3.15.
+Se ejecutó con pytest 9.2.0; el CI verifica cada lab en Python 3.12 y 3.15.
 
-**Tarea 2, la fixture en otro archivo.** No puede. Las fixtures de `test_cart.py` no existen para `test_discount.py`, y sus tres pruebas dan *error* de preparación:
+**Tarea 2, las fixtures en `test_cart.py`.** No funcionan. Una fixture escrita en un archivo de pruebas solo existe para ese archivo, y las tres pruebas de `test_discount.py` dan *error* de preparación:
 
 ```text
 E       fixture 'cart' not found
 >       available fixtures: almost_discount, capfd, capfdbinary, caplog, capsys, …
 ```
 
-En la lista de fixtures disponibles está `almost_discount` (definida en ese archivo) y las que trae pytest, pero no `cart`. Para eso existe `conftest.py`.
+En la lista está `almost_discount` (definida en ese archivo) y las que trae pytest, pero no `cart`. Para eso existe `conftest.py`.
 
 **Tarea 2, `m5` con dos pruebas.** Sobrevive. En los dos casos del límite, el descuento correcto y el fijo de 10,00 dan lo mismo: 0 con 99,99, y 10,00 con 100,00 exactos.
 
@@ -254,7 +228,7 @@ En la lista de fixtures disponibles está `almost_discount` (definida en ese arc
 FAILED tests/test_mutant_hunt.py::test_your_tests_catch[m5-fixed-discount]
 ```
 
-Es la lección de clases del [lab 1.3](../03-test-case-design/README.md): los límites no reemplazan a un representativo de la clase «con descuento», lejos del borde. Con dos vouchers, el descuento correcto es 1999 y el mutante sigue diciendo 1000.
+Es la lección de clases del lab 1.3: los límites no reemplazan a un representativo de la clase «con descuento», lejos del borde. Con dos vouchers, el descuento correcto es 1999 y el mutante sigue diciendo 1000.
 
 **Tarea 2, `cart` con `scope="module"`.** No arranca ninguna prueba. Una fixture que vive todo el archivo no puede usar una que vive por prueba:
 
@@ -284,7 +258,7 @@ ERROR tests/test_cart.py - Failed: 'slow' not found in `markers` configuratio...
 !!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
 ```
 
-Con la marca registrada, `-m "not slow"` deja fuera la prueba lenta (unos 0,3 s en la máquina donde se verificó): `6 passed, 1 deselected`.
+Así, un error de tipeo (`@pytest.mark.slwo`) no pasa inadvertido. Con la marca registrada, `-m "not slow"` deja fuera la prueba lenta (unos 0,3 s en la máquina donde se verificó): `6 passed, 1 deselected`.
 </details>
 
 ## 🎤 Autoevaluación
@@ -295,10 +269,5 @@ Con la marca registrada, `-m "not slow"` deja fuera la prueba lenta (unos 0,3 s 
 5. Tu suite tarda 8 minutos y el equipo dejó de correrla antes de subir cambios. ¿Qué harías con lo de este lab?
 
 La solución completa está en [`solution/`](solution/).
-
-## 🔁 Retrospectiva
-- ¿Qué entendí?
-- ¿Qué me costó?
-- ¿Qué debería reforzar?
 
 **Siguiente:** [1.5 · Dobles de prueba](../05-test-doubles/README.md)
