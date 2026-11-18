@@ -2,6 +2,22 @@
 
 Solo las que alguien podría deshacer sin saber por qué. Si una cambia, se actualiza su entrada en el mismo commit.
 
+## Revisión de dependencias (18 nov 2026, StudyForge 1.4)
+Cada biblioteca fijada pasó por la lista de StudyForge para elegir una dependencia (`references/dependencies.md`). Se revisaron todas, también pytest: en este camino es el tema, no una plataforma que venga dada.
+
+| Biblioteca | Dónde | Vulnerabilidades | Mantenida | Adopción (descargas/mes) | Licencia | Corre en Windows | Dependencias propias |
+|---|---|---|---|---|---|---|---|
+| pytest 9.2.0 | `requirements.txt`, proyectos | ninguna | sí: 9.2.0 del 27 oct 2026, organización pytest-dev | ~977 M | MIT | sí (`verify.py`) | 5 (colorama, iniconfig, packaging, pluggy, pygments) |
+| pytest-cov 7.1.0 | `requirements.txt`, 1.P | ninguna | sí: 7.1.0 del 21 mar 2026, pytest-dev | ~254 M | MIT | sí (`verify.py`) | coverage, pluggy, pytest |
+| requests 2.34.2 | `requirements.txt`, 2.P | ninguna | sí: 2.34.2 del 14 may 2026, organización psf | ~1.497 M | Apache-2.0 | sí (`verify.py`) | 4 (charset-normalizer, idna, urllib3, certifi) |
+| pytest-httpserver 1.2.1 | `requirements.txt`, 2.P | ninguna | sí: 1.2.1 del 10 nov 2026 | ~4,4 M | MIT | sí (`verify.py`) | Werkzeug (y MarkupSafe) |
+| testcontainers[postgres] 4.15.0 | `05-containers/demo` | ninguna | sí: 4.15.0 del 24 jul 2026, organización testcontainers | ~40 M | Apache-2.0 | sí, con Docker (6 pruebas, ninguna saltada) | 5 (docker, python-dotenv, typing-extensions, urllib3, wrapt) |
+| psycopg[binary] 3.3.9 | `05-containers/demo` | ninguna | sí: 3.3.9 del 12 nov 2026, organización psycopg | ~217 M | **LGPL-3.0-only** | sí, con Docker (la misma corrida) | tzdata en Windows |
+
+- **Cómo se comprobó:** `pip-audit 2.10.1` sobre cada `requirements*.txt`, con la base de PyPI y con OSV (`-s osv`): «No known vulnerabilities found» en los cuatro archivos. Fechas, licencias y descargas, de la API de PyPI y de pypistats; repositorios no archivados y autores de commits del último año, de la API de GitHub. Windows: `python tools/verify.py --strict` en Windows 11 con Python 3.13, y la demo del 2.5 contra PostgreSQL en Docker.
+- **pytest-httpserver es de una persona** (el repositorio es de su autor, no de una organización), pero no depende solo de ella: en el último año tiene commits de otras cuatro personas, y sacó versión hace ocho días. Se queda; si deja de publicar, la alternativa se evalúa con esta misma lista.
+- **psycopg es LGPL-3.0, no MIT, Apache ni BSD como pide la lista.** Se usa sin modificar, solo en el electivo 2.5, y el aprendiz lo instala desde PyPI: este repositorio no lo copia ni lo redistribuye. **Pendiente de decisión del mantenedor:** mantenerlo (recomendado: es el controlador que el aprendiz encontrará en el trabajo) o cambiarlo por pg8000 1.31.6 (BSD-3-Clause, ~55 M descargas/mes, sin probar aquí con testcontainers).
+
 ## Plan de los bloques 2 a 4 (18 nov 2026)
 - **Se construye solo el bloque 2.** Los bloques 3 y 4 esperan el primer feedback del bloque 1: copiarán sus patrones (caza de mutantes, formato del README), y un problema de fondo obligaría a rehacer tres bloques en vez de uno.
 - **El 2.2 no vuelve a enseñar `tmp_path`.** Es del 1.5. El 2.2 se queda con lo que solo aparece con archivos reales: datos de prueba guardados junto a las pruebas, archivos esperados (*golden files*) y los saltos de línea y codificaciones de cada sistema.

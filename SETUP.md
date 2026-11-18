@@ -63,7 +63,7 @@ Deberías ver Python 3.12 o superior, `pytest 9.2.0` y una ruta que **termina en
 git switch -c solutions/tu-nombre
 ```
 
-Cuando el repositorio reciba mejoras, tráelas a tu rama con `git pull origin master` (estando en tu rama). Si tomas el curso con la comunidad, haz un **fork** en GitHub y trabaja en tu fork.
+Cuando el repositorio reciba mejoras, tráelas a tu rama con `git pull origin master` (estando en tu rama). Después, con el entorno activo, vuelve a correr `python -m pip install -r requirements.txt`: un bloque nuevo puede traer bibliotecas nuevas. Si tomas el curso con la comunidad, haz un **fork** en GitHub y trabaja en tu fork.
 
 ## Leer las guías
 
