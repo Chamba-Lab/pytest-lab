@@ -45,3 +45,7 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Golden file (archivo esperado) | El resultado correcto guardado como archivo y revisado a mano; la prueba compara contra él. La técnica se llama *snapshot* o *approval testing* | [2.2](labs/02-integration-tests/02-real-files/README.md) |
 | Encoding (codificación) | La regla que convierte texto en bytes y bytes en texto, como UTF-8 | [2.2](labs/02-integration-tests/02-real-files/README.md) |
 | Universal newlines | Al leer en modo texto, Python convierte `\r\n` y `\r` en `\n` | [2.2](labs/02-integration-tests/02-real-files/README.md) |
+| Yield fixture | Una fixture que entrega su valor con `yield`; lo que va después es la limpieza, y corre aunque la prueba falle | [2.3](labs/02-integration-tests/03-real-database/README.md) |
+| Seed data (datos sembrados) | Filas fijas que una fixture guarda en la base antes de la prueba, para saber qué debe responder cada consulta | [2.3](labs/02-integration-tests/03-real-database/README.md) |
+| Transaction · Commit · Rollback | Un grupo de cambios que la base aplica todos o ninguno: se confirman (*commit*) o se deshacen (*rollback*) | [2.3](labs/02-integration-tests/03-real-database/README.md) |
+| SQL injection | Un ataque que aprovecha un valor pegado dentro del texto del SQL; los parámetros (`?`) lo evitan | [2.3](labs/02-integration-tests/03-real-database/README.md) |

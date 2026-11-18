@@ -215,4 +215,4 @@ E       FileNotFoundError: [Errno 2] No such file or directory: '...\\test_the_r
 
 La solución completa está en [`solution/`](solution/).
 
-**Siguiente:** 2.3 · Una base de datos real
+**Siguiente:** [2.3 · Una base de datos real](../03-real-database/README.md)

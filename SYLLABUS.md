@@ -40,7 +40,7 @@ Probar tu código junto con lo real: archivos, una base de datos y un servicio H
 |---|---|---|---|---|---|
 | [2.1](labs/02-integration-tests/01-what-changes/README.md) | Qué cambia al integrar | 🎯 `core` | 💭 `concept` | Decidir qué parte de un sistema probar con lo real y cuál con un doble, y mantener cada prueba aislada aunque use algo real | 🟨 `built` |
 | [2.2](labs/02-integration-tests/02-real-files/README.md) | Archivos reales | 🎯 `core` | 🧩 `challenge` | Probar código que lee y escribe archivos: guardar datos de prueba, comparar lo escrito con un archivo esperado y no caer en las diferencias entre Windows y Linux | 🟨 `built` |
-| 2.3 | Una base de datos real | 🎯 `core` | 🧩 `challenge` | Probar consultas contra SQLite, preparando la base antes de cada prueba y limpiándola después | ⬜ `pending` |
+| [2.3](labs/02-integration-tests/03-real-database/README.md) | Una base de datos real | 🎯 `core` | 🧩 `challenge` | Probar consultas contra SQLite, preparando la base antes de cada prueba y limpiándola después | 🟨 `built` |
 | 2.4 | Un servicio HTTP | 🎯 `core` | 🧩 `challenge` | Probar un cliente HTTP contra un servidor de prueba local y simular sus fallas: errores, respuestas lentas y un servicio caído | ⬜ `pending` |
 | 2.5 | Dependencias en contenedores | ➕ `elective` | 🔭 `exploration` | Levantar PostgreSQL en un contenedor solo durante las pruebas y ver qué esconde probar con SQLite. Necesita Docker | ⬜ `pending` |
 | 2.P | Proyecto: importar gastos | 🎯 `core` | 🏗️ `project` | Escribir la suite de integración de un importador que lee un archivo, consulta un servicio de tipos de cambio y guarda en una base de datos | ⬜ `pending` |
@@ -90,7 +90,7 @@ Mantener una suite confiable en equipo: arreglar pruebas inestables, escribir la
 | 1.P | `capsys`, fixtures que devuelven una función, archivos con BOM | 1.1–1.6 | La aplicación `splitbill` terminada; la suite, desde cero |
 | 2.1 | Qué es una prueba de integración por dentro: el borde entre tu código y lo real, cuándo integrar y cuándo usar un doble, aislamiento con recursos compartidos (preparar, limpiar, independencia del orden), el costo de lo real | 1.1, 1.5 | Nada: solo `CONCEPT.md` |
 | 2.2 | Datos de prueba junto a las pruebas (`Path(__file__).parent`), archivos esperados (*golden files*), texto frente a bytes, `encoding` y `newline`, carpetas que faltan y archivos que ya existen | 1.3, 1.5 (`tmp_path`) | Módulo `roster.py` terminado |
-| 2.3 | Fixtures con `yield` (preparar y limpiar), `sqlite3`, base en memoria frente a archivo, una transacción con *rollback* por prueba, conexión por prueba frente a por sesión | 1.4, 2.1 | Módulo terminado con consultas a `sqlite3` |
+| 2.3 | Fixtures con `yield` (preparar y limpiar), `sqlite3` y la base `:memory:` por prueba, parámetros en el SQL, datos sembrados, transacciones (*commit*, *rollback*, `with conn:`); el *rollback* por prueba va en 💼 | 1.4, 2.1 | Módulo `scores.py` terminado |
 | 2.4 | Servidor de prueba local (pytest-httpserver), revisar lo que pidió el cliente, errores HTTP, tiempo de espera (*timeout*), conexión rechazada | 1.5, 2.3 | Cliente HTTP terminado con requests |
 | 2.5 | testcontainers, una base de datos en un contenedor por sesión, diferencias entre SQLite y PostgreSQL, saltar sin Docker | 2.3 | `demo/` terminado |
 | 2.P | Lo que falte va en «Lo nuevo de este proyecto» del BRIEF | 2.1–2.4 | La aplicación terminada; la suite, desde cero |
