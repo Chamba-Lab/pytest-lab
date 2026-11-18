@@ -1,0 +1,14 @@
+# The project is atomic: it declares its own metadata, test dependencies
+# (requirements-dev.txt) and pytest configuration, and imports nothing from the labs.
+[project]
+name = "expenses"
+version = "1.0.0"
+description = "Import expenses from a CSV file into SQLite, converting every amount to soles."
+requires-python = ">=3.12"
+dependencies = ["requests==2.34.2"]
+
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["src"]
+strict_markers = true
+strict_xfail = true

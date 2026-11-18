@@ -1,0 +1,6 @@
+# The project's acceptance tests: a mutant hunt over a whole test suite (see test_suite_hunt.py).
+# Only pytest is needed. The mutants are data for the hunt, not tests: they are never collected.
+[tool.pytest]
+testpaths = ["test_suite_hunt.py"]
+strict_markers = true
+strict_xfail = true

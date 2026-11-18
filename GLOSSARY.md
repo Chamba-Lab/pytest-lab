@@ -55,3 +55,5 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Container · Image (contenedor · imagen) | Un programa que corre aislado y se borra entero al terminar · el paquete de versión fija del que nace | [2.5](labs/02-integration-tests/05-containers/README.md) |
 | Testcontainers | Una librería que crea contenedores desde las pruebas, espera a que estén listos y los borra al final | [2.5](labs/02-integration-tests/05-containers/README.md) |
 | Parametrized fixture (fixture parametrizada) | Una fixture con `params=`: cada prueba que la pide corre una vez por valor | [2.5](labs/02-integration-tests/05-containers/README.md) |
+| `httpserver.log` | La lista de peticiones que recibió el servidor de prueba, para contar cuántas veces llamó el cliente | [2.P](labs/02-integration-tests/project-expense-import/BRIEF.md#lo-nuevo-de-este-proyecto) |
+| One-shot response (respuesta de un solo uso) | Una respuesta del servidor de prueba que vale una vez, para probar «falla y después funciona» | [2.P](labs/02-integration-tests/project-expense-import/BRIEF.md#lo-nuevo-de-este-proyecto) |

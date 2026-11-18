@@ -14,7 +14,7 @@
 | Bloque | Al terminar podrás… | Estado |
 |---|---|---|
 | 1 · Pruebas unitarias | Escribir, diseñar y organizar pruebas unitarias que atrapan bugs reales | 🟨 `built` |
-| 2 · Pruebas de integración | Probar tu código junto con lo real: archivos, una base de datos y un servicio HTTP | ⬜ `pending` |
+| 2 · Pruebas de integración | Probar tu código junto con lo real: archivos, una base de datos y un servicio HTTP | 🟨 `built` |
 | 3 · Pruebas de aceptación | Probar el sistema completo como lo usa una persona: una línea de comandos y una API web | ⬜ `pending` |
 | 4 · Calidad de la suite | Mantener una suite confiable en equipo: arreglar pruebas inestables, escribir la prueba primero, medir qué bugs atrapa y correrla sola en cada cambio | ⬜ `pending` |
 
@@ -43,7 +43,7 @@ Probar tu código junto con lo real: archivos, una base de datos y un servicio H
 | [2.3](labs/02-integration-tests/03-real-database/README.md) | Una base de datos real | 🎯 `core` | 🧩 `challenge` | Probar consultas contra SQLite, preparando la base antes de cada prueba y limpiándola después | 🟨 `built` |
 | [2.4](labs/02-integration-tests/04-http-service/README.md) | Un servicio HTTP | 🎯 `core` | 🧩 `challenge` | Probar un cliente HTTP contra un servidor de prueba local y simular sus fallas: errores, respuestas lentas y un servicio caído | 🟨 `built` |
 | [2.5](labs/02-integration-tests/05-containers/README.md) | Dependencias en contenedores | ➕ `elective` | 🔭 `exploration` | Levantar PostgreSQL en un contenedor solo durante las pruebas y ver qué esconde probar con SQLite. Necesita Docker | 🟨 `built` |
-| 2.P | Proyecto: importar gastos | 🎯 `core` | 🏗️ `project` | Escribir la suite de integración de un importador que lee un archivo, consulta un servicio de tipos de cambio y guarda en una base de datos | ⬜ `pending` |
+| [2.P](labs/02-integration-tests/project-expense-import/README.md) | Proyecto: importar gastos | 🎯 `core` | 🏗️ `project` | Escribir la suite de integración de un importador que lee un archivo, consulta un servicio de tipos de cambio y guarda en una base de datos | 🟨 `built` |
 
 ## Bloque 3 · Pruebas de aceptación
 Probar el sistema completo como lo usa una persona: una línea de comandos y una API web.
@@ -93,7 +93,7 @@ Mantener una suite confiable en equipo: arreglar pruebas inestables, escribir la
 | 2.3 | Fixtures con `yield` (preparar y limpiar), `sqlite3` y la base `:memory:` por prueba, parámetros en el SQL, datos sembrados, transacciones (*commit*, *rollback*, `with conn:`); el *rollback* por prueba va en 💼 | 1.4, 2.1 | Módulo `scores.py` terminado |
 | 2.4 | Servidor de prueba local (pytest-httpserver), expectativas (ruta, parámetros, encabezados), `check_assertions`, errores HTTP, `Delay`, tiempo de espera (*timeout*), servicio caído, `--durations` | 1.4, 2.1 | Cliente `weather.py` terminado, con requests |
 | 2.5 | Contenedor e imagen, testcontainers con PostgreSQL por sesión, fixtures parametrizadas (`params=`, `request.param`), `importorskip` y saltar sin Docker, `LIKE` y *type affinity* de SQLite frente a PostgreSQL | 1.3, 1.4, 2.3 | `demo/` terminado (`contacts.py`) |
-| 2.P | Lo que falte va en «Lo nuevo de este proyecto» del BRIEF | 2.1–2.4 | La aplicación terminada; la suite, desde cero |
+| 2.P | `httpserver.log`, `expect_oneshot_request`, cerrar no es confirmar (en «Lo nuevo de este proyecto» del BRIEF) | 2.1–2.4 | La aplicación `expenses` terminada; la suite, desde cero |
 | 3.1 | Criterios de aceptación (Dado / Cuando / Entonces), caja negra, qué recorridos merecen una prueba de punta a punta | 1.1, 2.1 | Nada: solo `CONCEPT.md` |
 | 3.2 | Correr un programa desde una prueba (`subprocess`), argumentos, salida estándar y de error, código de salida, entorno del proceso | 3.1 | Una CLI terminada (puede retomar `splitbill`: sus pruebas de caja negra están en la historia de git) |
 | 3.3 | Levantar la app en otro proceso (uvicorn), esperar a que esté lista, puerto libre, probar por sus rutas | 3.2, 2.4 | API terminada con FastAPI |
@@ -113,5 +113,7 @@ Mantener una suite confiable en equipo: arreglar pruebas inestables, escribir la
 - 1.4 revisa la organización con `tests/test_structure.py`. En `conftest.py`, la parte de la caza va arriba (antes de importar el módulo) y las fixtures abajo. Los stubs del starter no piden fixtures en su firma: una fixture inexistente es un *error* de preparación, no un `skip`.
 - El proyecto 1.P se valida con una caza de mutantes de toda la aplicación (`acceptance/`), que corre la suite del aprendiz contra la referencia y contra cada mutante. El bloque 3 puede retomar `splitbill`: las pruebas de caja negra de su línea de comandos están en la historia de git (antes de la reconstrucción del bloque 1).
 - **El bloque 1 está construido completo (1.1–1.6 y 1.P).** Queda esperar el feedback de quienes lo resuelvan; el CI corre el verificador en Python 3.12 y 3.15 y la caza del proyecto.
-- **Los bloques 2 a 4 están planificados** (18 nov 2026): librerías elegidas y dominio de cada proyecto. El bloque 2 se construye ahora; los bloques 3 y 4 esperan el primer feedback del bloque 1, porque copiarán sus patrones. Las versiones se fijan al construir cada bloque.
-- **Bloque 2:** `tmp_path` y `monkeypatch` son del 1.5; el 2.2 los usa con un enlace, sin volver a enseñarlos. Las fixtures con `yield` son del 2.3. Las dependencias del 2.5 (testcontainers y el driver de PostgreSQL) van en un `requirements` propio del lab, para que el camino principal no las instale.
+- **Los bloques 2 a 4 están planificados** (18 nov 2026): librerías elegidas y dominio de cada proyecto. Los bloques 3 y 4 esperan el primer feedback de los bloques 1 y 2, porque copiarán sus patrones. Las versiones se fijan al construir cada bloque.
+- **El bloque 2 está construido completo (2.1–2.5 y 2.P).** `tmp_path` y `monkeypatch` son del 1.5; el 2.2 los usa con un enlace, sin volver a enseñarlos. Las fixtures con `yield` son del 2.3. Las dependencias del 2.5 (testcontainers y el driver de PostgreSQL) van en `demo/requirements.txt`, para que el camino principal no las instale; el CI las instala en un paso aparte y exige que las pruebas de PostgreSQL corran.
+- **Todo servidor de prueba escucha en `127.0.0.1`** (fixture `httpserver_listen_address`): con `localhost`, en Windows cada petición esperaba medio segundo (ver `docs/lessons.md`, lab 2.4). Los mutantes de red deben morir igual en Windows y en Linux: un puerto cerrado da `ConnectTimeout` en uno y `ConnectionError` en el otro.
+- **El proyecto 2.P** repite la caza de toda la suite del 1.P (`EXPENSES_SUITE`), con 13 mutantes de encaje. El bloque 3 puede apoyarse en él: sus pruebas de aceptación necesitarán una línea de comandos o una API delante del mismo importador.

@@ -2,11 +2,11 @@
 
 Aprende a escribir pruebas automatizadas que **fallan por la razón correcta**: desde tu primer `assert` hasta mantener una suite en equipo. Es para quien sabe Python básico y quiere probar su código con el criterio que se espera en un trabajo.
 
-El camino sube la pirámide de pruebas en cuatro bloques: pruebas unitarias, de integración, de aceptación y la calidad de la suite. **El bloque 1, pruebas unitarias, está listo**; los demás están planificados en el [sílabo](SYLLABUS.md).
+El camino sube la pirámide de pruebas en cuatro bloques: pruebas unitarias, de integración, de aceptación y la calidad de la suite. **Los bloques 1 y 2, pruebas unitarias y de integración, están listos**; los demás están planificados en el [sílabo](SYLLABUS.md).
 
-| 🧱 Bloques | 🧪 Bloque 1 | ⏱️ Por lab | 🛠️ Stack |
+| 🧱 Bloques | 🧪 Construidos | ⏱️ Por lab | 🛠️ Stack |
 |---|---|---|---|
-| 4 (1 construido) | 6 labs + 1 proyecto | 1–2 h | Python 3.12+ · pytest 9.2 · pytest-cov 7.1 |
+| 4 (2 construidos) | Bloque 1: 6 labs + 1 proyecto · Bloque 2: 5 labs (uno electivo) + 1 proyecto | 1–2 h | Python 3.12+ · pytest 9.2 · requests · pytest-httpserver |
 
 ## 🚀 Empieza
 1. Instala todo con [SETUP.md](SETUP.md).
