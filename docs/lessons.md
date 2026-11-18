@@ -87,3 +87,8 @@ Las secciones de cada lab usan los IDs de la primera versión del bloque 1: el v
 - **El proyecto necesitaba algo que ningún lab enseñó:** que `SUM` de SQLite suma como `float` (`m09`). Pasó a «Lo nuevo» del BRIEF, junto con qué es la huella y cómo se cuentan las líneas.
 - **Una respuesta verificada estaba incompleta:** `m7` del 2.4 muere en las dos pruebas de la tarea 3, no solo en la del servicio caído, y lo que escapa es `requests.exceptions.ConnectTimeout`, no el error interno de urllib3.
 - **Se dejó igual a propósito:** el bloque «Corre todo con este comando» de cada reto, porque es el mismo patrón del bloque 1 y cambiarlo solo aquí rompería la uniformidad; y la tabla «Lo que viene» del 2.1, que sirve de mapa del bloque.
+
+## Actualización a StudyForge 1.4
+- **Un entorno creado antes del bloque 2 no tiene sus bibliotecas.** El `.venv` de esta máquina era del bloque 1: `verify.py --strict` dio `exit code 4` en la solución del 2.4 y en la referencia del 2.P (`ModuleNotFoundError: No module named 'requests'`) y «0 tests ran» en el starter del 2.4. Con `python -m pip install -r requirements.txt` otra vez, los 13 labs pasan. Le pasará a cualquier aprendiz que empezó antes del bloque 2 y trae las mejoras con `git pull`; por eso `SETUP.md` ahora pide reinstalar después de traerlas.
+- **La trampa de `~/.testcontainers.properties` sigue viva en esta máquina.** La demo del 2.5 con sus bibliotecas dio `3 passed, 3 errors` (`Invalid bind address format`); con `USERPROFILE` en una carpeta vacía, `6 passed`. El 🆘 del lab sigue siendo necesario.
+- **La lista de StudyForge encontró una licencia fuera de lo esperado:** psycopg es LGPL-3.0. Queda anotada en `decisions.md` para que el mantenedor decida.
