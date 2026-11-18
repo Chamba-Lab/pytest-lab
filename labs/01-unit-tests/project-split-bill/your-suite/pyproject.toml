@@ -1,0 +1,7 @@
+# Your test suite for splitbill. The application is finished, in ../reference/src: do not change it.
+# Run it from this folder with: python -m pytest
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["../reference/src"]
+strict_markers = true
+strict_xfail = true

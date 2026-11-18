@@ -1,6 +1,6 @@
 # StudyForge configuration. Read by the workflows and by tools/verify.py.
 # Reference: https://github.com/Chamba-Lab/studyforge/blob/master/skills/studyforge/references/layout.md
-studyforge = "0.1.0"
+studyforge = "1.1.0"
 
 [path]
 title = "Testing en Python con pytest: de cero a confiable"

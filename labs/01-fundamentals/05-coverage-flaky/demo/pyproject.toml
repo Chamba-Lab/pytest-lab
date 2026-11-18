@@ -1,5 +1,0 @@
-# pytest configuration for this demo (native TOML table, pytest 9+). No packaging.
-# Only tests/ runs by default; the unstable examples in experiments/ run on purpose.
-[tool.pytest]
-testpaths = ["tests"]
-pythonpath = ["."]

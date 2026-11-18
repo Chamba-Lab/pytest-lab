@@ -1,6 +1,6 @@
 # Runs the StudyForge verifier on every lab (solution green, starter red for the
 # right reason) on the oldest and newest supported Python, plus the project's
-# black-box acceptance tests against its reference. About a minute.
+# acceptance: the mutant hunt over the reference suite. About a minute.
 name: verify
 
 on:
@@ -27,6 +27,6 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install --disable-pip-version-check -r requirements.txt
       - run: python tools/verify.py
-      - name: Project acceptance tests against the reference
-        working-directory: labs/01-fundamentals/project-split-bill/acceptance
+      - name: Project acceptance (mutant hunt over the reference suite)
+        working-directory: labs/01-unit-tests/project-split-bill/acceptance
         run: python -m pytest -q -p no:cacheprovider
