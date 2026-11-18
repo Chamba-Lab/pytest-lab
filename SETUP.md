@@ -7,6 +7,7 @@ Instala esto una sola vez, antes del lab 1.1.
 | Python | 3.12 o superior (verificado en 3.12 y 3.15) | `python --version` |
 | Git | cualquiera reciente | `git --version` |
 | pytest, pytest-cov, requests y pytest-httpserver | las de `requirements.txt` (se instalan abajo) | `python -m pytest --version` |
+| Docker (opcional) | Docker Desktop en Windows y macOS; solo para el electivo [2.5](labs/02-integration-tests/05-containers/README.md) | `docker version` |
 
 > [!NOTE]
 > En Windows, si `python` abre la Microsoft Store o no existe, instala Python desde [python.org](https://www.python.org/downloads/) y marca *Add python.exe to PATH*. El lanzador `py` también sirve: usa `py -m venv .venv` para crear el entorno; una vez activo, `python` ya es el del entorno.
