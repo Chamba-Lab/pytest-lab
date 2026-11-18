@@ -49,3 +49,6 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Seed data (datos sembrados) | Filas fijas que una fixture guarda en la base antes de la prueba, para saber qué debe responder cada consulta | [2.3](labs/02-integration-tests/03-real-database/README.md) |
 | Transaction · Commit · Rollback | Un grupo de cambios que la base aplica todos o ninguno: se confirman (*commit*) o se deshacen (*rollback*) | [2.3](labs/02-integration-tests/03-real-database/README.md) |
 | SQL injection | Un ataque que aprovecha un valor pegado dentro del texto del SQL; los parámetros (`?`) lo evitan | [2.3](labs/02-integration-tests/03-real-database/README.md) |
+| Test server (servidor de prueba) | Un servidor HTTP real que corre en tu máquina durante la prueba y responde lo que la prueba le pide | [2.4](labs/02-integration-tests/04-http-service/README.md) |
+| Expectation (expectativa) | La petición que el servidor de prueba espera (ruta, parámetros, encabezados) y lo que responde a ella | [2.4](labs/02-integration-tests/04-http-service/README.md) |
+| Timeout (tiempo de espera) | El máximo que un cliente espera una respuesta antes de rendirse con un error | [2.4](labs/02-integration-tests/04-http-service/README.md) |

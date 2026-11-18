@@ -223,4 +223,4 @@ Comprobar la excepción dice que el error se detectó; comprobar el estado dice 
 
 La solución completa está en [`solution/`](solution/).
 
-**Siguiente:** 2.4 · Un servicio HTTP
+**Siguiente:** [2.4 · Un servicio HTTP](../04-http-service/README.md)
