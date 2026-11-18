@@ -42,7 +42,7 @@ Probar tu código junto con lo real: archivos, una base de datos y un servicio H
 | [2.2](labs/02-integration-tests/02-real-files/README.md) | Archivos reales | 🎯 `core` | 🧩 `challenge` | Probar código que lee y escribe archivos: guardar datos de prueba, comparar lo escrito con un archivo esperado y no caer en las diferencias entre Windows y Linux | 🟨 `built` |
 | [2.3](labs/02-integration-tests/03-real-database/README.md) | Una base de datos real | 🎯 `core` | 🧩 `challenge` | Probar consultas contra SQLite, preparando la base antes de cada prueba y limpiándola después | 🟨 `built` |
 | [2.4](labs/02-integration-tests/04-http-service/README.md) | Un servicio HTTP | 🎯 `core` | 🧩 `challenge` | Probar un cliente HTTP contra un servidor de prueba local y simular sus fallas: errores, respuestas lentas y un servicio caído | 🟨 `built` |
-| 2.5 | Dependencias en contenedores | ➕ `elective` | 🔭 `exploration` | Levantar PostgreSQL en un contenedor solo durante las pruebas y ver qué esconde probar con SQLite. Necesita Docker | ⬜ `pending` |
+| [2.5](labs/02-integration-tests/05-containers/README.md) | Dependencias en contenedores | ➕ `elective` | 🔭 `exploration` | Levantar PostgreSQL en un contenedor solo durante las pruebas y ver qué esconde probar con SQLite. Necesita Docker | 🟨 `built` |
 | 2.P | Proyecto: importar gastos | 🎯 `core` | 🏗️ `project` | Escribir la suite de integración de un importador que lee un archivo, consulta un servicio de tipos de cambio y guarda en una base de datos | ⬜ `pending` |
 
 ## Bloque 3 · Pruebas de aceptación
@@ -92,7 +92,7 @@ Mantener una suite confiable en equipo: arreglar pruebas inestables, escribir la
 | 2.2 | Datos de prueba junto a las pruebas (`Path(__file__).parent`), archivos esperados (*golden files*), texto frente a bytes, `encoding` y `newline`, carpetas que faltan y archivos que ya existen | 1.3, 1.5 (`tmp_path`) | Módulo `roster.py` terminado |
 | 2.3 | Fixtures con `yield` (preparar y limpiar), `sqlite3` y la base `:memory:` por prueba, parámetros en el SQL, datos sembrados, transacciones (*commit*, *rollback*, `with conn:`); el *rollback* por prueba va en 💼 | 1.4, 2.1 | Módulo `scores.py` terminado |
 | 2.4 | Servidor de prueba local (pytest-httpserver), expectativas (ruta, parámetros, encabezados), `check_assertions`, errores HTTP, `Delay`, tiempo de espera (*timeout*), servicio caído, `--durations` | 1.4, 2.1 | Cliente `weather.py` terminado, con requests |
-| 2.5 | testcontainers, una base de datos en un contenedor por sesión, diferencias entre SQLite y PostgreSQL, saltar sin Docker | 2.3 | `demo/` terminado |
+| 2.5 | Contenedor e imagen, testcontainers con PostgreSQL por sesión, fixtures parametrizadas (`params=`, `request.param`), `importorskip` y saltar sin Docker, `LIKE` y *type affinity* de SQLite frente a PostgreSQL | 1.3, 1.4, 2.3 | `demo/` terminado (`contacts.py`) |
 | 2.P | Lo que falte va en «Lo nuevo de este proyecto» del BRIEF | 2.1–2.4 | La aplicación terminada; la suite, desde cero |
 | 3.1 | Criterios de aceptación (Dado / Cuando / Entonces), caja negra, qué recorridos merecen una prueba de punta a punta | 1.1, 2.1 | Nada: solo `CONCEPT.md` |
 | 3.2 | Correr un programa desde una prueba (`subprocess`), argumentos, salida estándar y de error, código de salida, entorno del proceso | 3.1 | Una CLI terminada (puede retomar `splitbill`: sus pruebas de caja negra están en la historia de git) |

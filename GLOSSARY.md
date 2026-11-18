@@ -52,3 +52,6 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Test server (servidor de prueba) | Un servidor HTTP real que corre en tu máquina durante la prueba y responde lo que la prueba le pide | [2.4](labs/02-integration-tests/04-http-service/README.md) |
 | Expectation (expectativa) | La petición que el servidor de prueba espera (ruta, parámetros, encabezados) y lo que responde a ella | [2.4](labs/02-integration-tests/04-http-service/README.md) |
 | Timeout (tiempo de espera) | El máximo que un cliente espera una respuesta antes de rendirse con un error | [2.4](labs/02-integration-tests/04-http-service/README.md) |
+| Container · Image (contenedor · imagen) | Un programa que corre aislado y se borra entero al terminar · el paquete de versión fija del que nace | [2.5](labs/02-integration-tests/05-containers/README.md) |
+| Testcontainers | Una librería que crea contenedores desde las pruebas, espera a que estén listos y los borra al final | [2.5](labs/02-integration-tests/05-containers/README.md) |
+| Parametrized fixture (fixture parametrizada) | Una fixture con `params=`: cada prueba que la pide corre una vez por valor | [2.5](labs/02-integration-tests/05-containers/README.md) |

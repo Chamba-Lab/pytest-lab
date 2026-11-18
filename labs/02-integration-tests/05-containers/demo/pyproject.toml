@@ -1,0 +1,7 @@
+# pytest configuration for this lab (native TOML table, pytest 9+). No packaging.
+# The experiments/ folder is not collected by default: the guide runs it on purpose.
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
+strict_markers = true
+strict_xfail = true

@@ -1,0 +1,3 @@
+# Only for this elective lab (2.5), on top of the root requirements.txt. Needs Docker.
+testcontainers[postgres]==4.15.0
+psycopg[binary]==3.3.9

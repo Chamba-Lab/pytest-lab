@@ -102,7 +102,7 @@ Por eso son pocas, enfocadas en el borde, y se pueden separar del resto con marc
 | [2.2](../02-real-files/README.md) | Archivos | Datos de prueba y archivos esperados; Windows frente a Linux |
 | [2.3](../03-real-database/README.md) | Una base de datos SQLite | Preparar y limpiar con pytest; transacciones: todo o nada |
 | [2.4](../04-http-service/README.md) | Un servicio HTTP | Un servidor de prueba local y sus fallas |
-| 2.5 (electivo) | PostgreSQL en un contenedor | Lo que esconde probar con una base distinta a la de producción |
+| [2.5](../05-containers/README.md) (electivo) | PostgreSQL en un contenedor | Lo que esconde probar con una base distinta a la de producción |
 | 2.P | Las tres cosas juntas | La suite de integración de un importador de gastos |
 
 ## Fuentes

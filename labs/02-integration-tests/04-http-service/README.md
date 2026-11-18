@@ -213,4 +213,4 @@ Y `m6`, sin `timeout`, espera los 1,5 s del servidor, recibe la respuesta y no l
 
 La solución completa está en [`solution/`](solution/).
 
-**Siguiente:** 2.5 · Dependencias en contenedores (electivo), o directo al [proyecto 2.P](../project-expense-import/README.md)
+**Siguiente:** [2.5 · Dependencias en contenedores](../05-containers/README.md) (electivo), o directo al [proyecto 2.P](../project-expense-import/README.md)
