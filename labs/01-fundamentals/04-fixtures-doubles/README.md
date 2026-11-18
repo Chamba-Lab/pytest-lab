@@ -52,10 +52,10 @@ pwd
 
 ```mermaid
 flowchart LR
-    L[Library] --> S[(LoanStore<br/>archivo JSON)]
-    L --> C[clock<br/>¿qué hora es?]
+    L[Library] --> S[(LoanStore<br/>Archivo JSON)]
+    L --> C[clock<br/>¿Qué hora es?]
     L --> N[Notifier<br/>send member, message]
-    E[LOAN_DAYS<br/>variable de entorno] -. 14 por defecto .-> L
+    E[LOAN_DAYS<br/>Variable de entorno] -. 14 por defecto .-> L
 ```
 
 | Método | Promete |
