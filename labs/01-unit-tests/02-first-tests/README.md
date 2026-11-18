@@ -161,7 +161,7 @@ python -m pytest -k ties -v
 
 ## 💼 En proyectos reales
 - **Nombra las pruebas por el comportamiento** (`test_the_passing_grade_itself_passes`), no por la función (`test_passed_2`): cuando falla en el CI (el servidor que corre las pruebas en cada cambio), el nombre ya dice qué se rompió.
-- **Existen herramientas que generan mutantes solas** a partir de tu código, como [mutmut](https://pypi.org/project/mutmut/). Son lentas para correrlas en cada cambio, pero muy útiles para auditar una suite; las verás en el bloque 4.
+- **Existen herramientas que generan mutantes solas** a partir de tu código, como [cosmic-ray](https://pypi.org/project/cosmic-ray/) o [mutmut](https://pypi.org/project/mutmut/). Son lentas para correrlas en cada cambio, pero muy útiles para auditar una suite; las verás en el bloque 4.
 
 ## 🚀 Reto extra
 Escribe tu propio mutante: copia `grades.py` en `tests/mutants/m6-<nombre>/`, siembra un bug que tus pruebas actuales **no** atrapen (pista: el promedio de una sola nota, o una nota exactamente en 0 o en 100) y agrega la prueba que lo mata. La caza lo detecta solo.
