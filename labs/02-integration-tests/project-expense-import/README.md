@@ -40,7 +40,7 @@ python -m pytest --durations=3
 16 passed in 1.74s
 ```
 
-Dieciséis pruebas con un archivo, una base y un servidor reales, en menos de dos segundos. Las dos más lentas esperan un `timeout` a propósito (lab 2.4).
+Dieciséis pruebas con un archivo, una base y un servidor reales, en menos de dos segundos. Las dos más lentas esperan un `timeout` a propósito (lab 2.4); la limpieza de la última prueba es la que apaga el servidor de prueba.
 
 ### Escribir y correr tu suite
 [`your-suite/`](your-suite/) ya trae su [`pyproject.toml`](your-suite/pyproject.toml), que importa la aplicación desde `../reference/src`, un [`conftest.py`](your-suite/tests/conftest.py) con `httpserver_listen_address` y una primera prueba de ejemplo en [`tests/test_store.py`](your-suite/tests/test_store.py). Dentro de `your-suite/`, en PowerShell o Bash:

@@ -117,7 +117,7 @@ python -m pytest
 - [ ] En `test_scores_are_saved_in_order(db)`: guarda dos puntajes de `"ana"`, 10 y después 4, y comprueba lo que devuelve `history`.
 - [ ] En `test_negative_points_are_rejected(db)`: guardar `-1` lanza `sqlite3.IntegrityError` (`pytest.raises`, lab 1.2).
 
-🔮 **Predict first:** cuando termines la tarea 2, prueba `db` con `scope="module"` (lab 1.4): todas las pruebas del archivo comparten una sola base. ¿Qué pruebas fallan, y por qué? Después, vuelve a dejarla sin `scope`.
+🔮 **Predict first:** cuando termines la tarea 3, prueba `db` con `scope="module"` (lab 1.4): todas las pruebas del archivo comparten una sola base. ¿Qué pruebas fallan, y por qué? Después, vuelve a dejarla sin `scope`.
 
 ### Tarea 2 · Datos sembrados en la base
 **Meta:** probar las consultas con datos que conoces. **La validan:** `[m3-total-not-best]`, `[m4-no-limit]` y `[m5-sql-by-hand]`.
@@ -126,23 +126,23 @@ python -m pytest
 
   | Jugador | Puntos |
   |---|---|
-  | beto | 7 |
-  | ana | 5 |
-  | ana | 9 |
-  | carla | 7 |
-  | dani | 2 |
+  | `beto` | 7 |
+  | `ana` | 5 |
+  | `ana` | 9 |
+  | `carla` | 7 |
+  | `dani` | 2 |
 
 - [ ] En `test_top_shows_the_best_score_of_each_player(seeded_db)`: comprueba la lista completa que devuelve `top(seeded_db)`. Calcúlala tú a partir de la tabla, sin correr el código.
 - [ ] En `test_a_name_with_an_apostrophe(db)`: guarda un puntaje de `"O'Higgins"` y léelo con `history`.
 
-🔮 **Predict first:** si en la última prueba usaras un nombre común, como `"ohiggins"`, ¿qué mutante sobreviviría? ¿Por qué solo lo atrapa una base real?
+🔮 **Predict first:** con `"O'Higgins"`, ¿`m5-sql-by-hand` falla en tu `assert` o antes, y con qué error? ¿Y si usaras un nombre común, como `"ohiggins"`?
 
 ### Tarea 3 · Todo o nada
 **Meta:** comprobar que un partido con un puntaje inválido no deja la base a medias. **La valida:** `[m6-not-atomic]`.
 
 - [ ] En `test_a_failed_match_saves_nothing(db)`: `record_match(db, {"ana": 10, "beto": -1})` lanza `sqlite3.IntegrityError`, y después la base no tiene ningún puntaje (`top(db)` devuelve una lista vacía).
 
-🔮 **Predict first:** ¿qué pasaría si solo comprobaras que se lanza la excepción, sin mirar la base después?
+🔮 **Predict first:** ¿qué excepción lanza `m6-not-atomic` con este partido, y qué queda en la base después? ¿Basta con comprobar la excepción?
 
 **Criterio de éxito:** `python -m pytest` dentro de `starter/` termina en verde: 12 pruebas pasan, ninguna se salta.
 
@@ -151,14 +151,14 @@ python -m pytest
 |---|---|
 | `sqlite3.connect(":memory:")` | Abre una base nueva en memoria; desaparece al cerrar la conexión |
 | `conn.execute(sql, (valor,))` | Ejecuta una sentencia; los `?` del SQL se reemplazan por los valores de la tupla |
-| `cursor.fetchall()` | Todas las filas del resultado, como una lista de tuplas |
+| `cursor.fetchall()` | Todas las filas del resultado, como una lista de tuplas (`execute` devuelve un *cursor*, el objeto que recorre esas filas) |
 | `with conn:` | Una transacción: confirma al salir bien; deshace si sale una excepción |
 | `conn.close()` | Cierra la conexión; con `:memory:`, la base se borra |
 
 ## 💼 En proyectos reales
 - **Nunca uses la base de producción para probar.** Las pruebas crean, cambian y borran datos. Usa una base propia de las pruebas, creada y destruida por ellas.
 - **Pegar valores dentro del SQL no es solo un bug: es un agujero de seguridad.** Si el texto viene de un usuario, puede cerrar la comilla y agregar su propio SQL (*SQL injection*). Los parámetros lo evitan.
-- **«Deshacer al terminar» tiene una trampa.** Con una base cara de crear, muchos equipos comparten una conexión y hacen `conn.rollback()` en la limpieza de cada prueba. Pero si el código bajo prueba confirma por su cuenta (como `add_score`, con `with conn:`), el rollback ya no deshace nada: se comprobó con este mismo esquema, y la fila confirmada seguía ahí. Las herramientas grandes, como SQLAlchemy o Django, lo resuelven con transacciones anidadas (*savepoints*).
+- **«Deshacer al terminar» tiene una trampa.** Con una base cara de crear, muchos equipos comparten una conexión y hacen `conn.rollback()` en la limpieza de cada prueba. Pero si el código bajo prueba confirma por su cuenta (como `add_score`, con `with conn:`), el rollback ya no deshace nada: se comprobó con este mismo esquema, y la fila confirmada seguía ahí. Las herramientas grandes, como SQLAlchemy o Django, lo resuelven con transacciones dentro de otra transacción (*savepoints*).
 - **SQLite no es tu base de producción.** Si en producción usas PostgreSQL o MySQL, algunas consultas se comportan distinto. El electivo [2.5](../05-containers/README.md) lo muestra.
 
 ## 🚀 Reto extra
@@ -197,7 +197,7 @@ E       AssertionError: assert [('ana', 10),... ('carla', 7)] == [('ana', 9), ..
 
 Y la última prueba encuentra la base llena, no vacía. Las pruebas que solo guardan y leen sus propios datos siguen pasando: la fuga solo se ve cuando una prueba depende de **toda** la base. Con la base nueva por prueba, ninguna ve lo de otra.
 
-**Tarea 2.** Sobrevive `m5-sql-by-hand`. Con `"ohiggins"`, armar el SQL a mano produce una consulta válida. Con el apóstrofo, la comilla del nombre cierra el texto antes de tiempo, y la base rechaza el SQL:
+**Tarea 2.** `m5-sql-by-hand` falla **antes** del `assert`, dentro de `history`: la comilla del nombre cierra el texto del SQL antes de tiempo, y la base rechaza la consulta. Con `"ohiggins"`, en cambio, el SQL armado a mano es válido y `m5` sobrevive:
 
 ```text
 E       sqlite3.OperationalError: near "Higgins": syntax error
@@ -205,7 +205,7 @@ E       sqlite3.OperationalError: near "Higgins": syntax error
 
 Un doble no ejecuta SQL, así que nunca lo vería: este bug solo existe entre tu código y la base. Ojo también con `top`: tu tabla tiene dos empates a propósito (beto y carla con 7), y ana tiene dos puntajes cuya suma (14) supera a todos. Esos datos son los que matan a `m3` y a `m4` con una sola prueba.
 
-**Tarea 3.** `m6-not-atomic` sobrevive: el mutante también lanza `IntegrityError` al llegar al puntaje de beto, pero el de ana ya quedó confirmado en su propia transacción. Solo mirar la base después lo delata:
+**Tarea 3.** `m6-not-atomic` lanza la misma `IntegrityError` al llegar al puntaje de beto, pero el de ana ya quedó confirmado en su propia transacción. Si solo compruebas la excepción, sobrevive; mirar la base después lo delata:
 
 ```text
 E       AssertionError: assert [('ana', 10)] == []

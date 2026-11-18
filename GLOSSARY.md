@@ -44,7 +44,7 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Test data (datos de prueba) | Archivos de ejemplo guardados junto a las pruebas, que las pruebas encuentran con `Path(__file__).parent` | [2.2](labs/02-integration-tests/02-real-files/README.md) |
 | Golden file (archivo esperado) | El resultado correcto guardado como archivo y revisado a mano; la prueba compara contra él. La técnica se llama *snapshot* o *approval testing* | [2.2](labs/02-integration-tests/02-real-files/README.md) |
 | Encoding (codificación) | La regla que convierte texto en bytes y bytes en texto, como UTF-8 | [2.2](labs/02-integration-tests/02-real-files/README.md) |
-| Universal newlines | Al leer en modo texto, Python convierte `\r\n` y `\r` en `\n` | [2.2](labs/02-integration-tests/02-real-files/README.md) |
+| Universal newlines | Cómo trata Python los saltos de línea al leer en modo texto (ver la respuesta verificada de la tarea 2) | [2.2](labs/02-integration-tests/02-real-files/README.md) |
 | Yield fixture | Una fixture que entrega su valor con `yield`; lo que va después es la limpieza, y corre aunque la prueba falle | [2.3](labs/02-integration-tests/03-real-database/README.md) |
 | Seed data (datos sembrados) | Filas fijas que una fixture guarda en la base antes de la prueba, para saber qué debe responder cada consulta | [2.3](labs/02-integration-tests/03-real-database/README.md) |
 | Transaction · Commit · Rollback | Un grupo de cambios que la base aplica todos o ninguno: se confirman (*commit*) o se deshacen (*rollback*) | [2.3](labs/02-integration-tests/03-real-database/README.md) |
@@ -54,6 +54,7 @@ Los términos del oficio, como los vas a encontrar en la documentación y en un 
 | Timeout (tiempo de espera) | El máximo que un cliente espera una respuesta antes de rendirse con un error | [2.4](labs/02-integration-tests/04-http-service/README.md) |
 | Container · Image (contenedor · imagen) | Un programa que corre aislado y se borra entero al terminar · el paquete de versión fija del que nace | [2.5](labs/02-integration-tests/05-containers/README.md) |
 | Testcontainers | Una librería que crea contenedores desde las pruebas, espera a que estén listos y los borra al final | [2.5](labs/02-integration-tests/05-containers/README.md) |
+| Type affinity | En SQLite, el tipo de una columna es una preferencia, no una regla: una columna `INTEGER` puede guardar texto | [2.5](labs/02-integration-tests/05-containers/README.md) |
 | Parametrized fixture (fixture parametrizada) | Una fixture con `params=`: cada prueba que la pide corre una vez por valor | [2.5](labs/02-integration-tests/05-containers/README.md) |
 | `httpserver.log` | La lista de peticiones que recibió el servidor de prueba, para contar cuántas veces llamó el cliente | [2.P](labs/02-integration-tests/project-expense-import/BRIEF.md#lo-nuevo-de-este-proyecto) |
 | One-shot response (respuesta de un solo uso) | Una respuesta del servidor de prueba que vale una vez, para probar «falla y después funciona» | [2.P](labs/02-integration-tests/project-expense-import/BRIEF.md#lo-nuevo-de-este-proyecto) |

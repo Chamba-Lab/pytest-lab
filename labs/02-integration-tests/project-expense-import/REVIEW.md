@@ -22,8 +22,7 @@ Cómo leer la suite de referencia, por qué es como es, y cómo comprobar que ca
 
 ## Trampas encontradas al construirla
 - **Una prueba con `with conn:` se miente a sí misma.** La primera versión de `test_a_saved_import_survives_closing_the_database` abría la conexión con `with sqlite3.connect(path) as conn:`. Pero `with` sobre una conexión **confirma** al salir: la prueba hace el `commit` que debía hacer `save_import`. Con esa versión, `m13` sobrevive (se comprobó). Ahora la prueba cierra con `conn.close()`, que no confirma nada.
-- **Un mutante roto no es un mutante muerto.** Al generar `m05`, un `\n` mal escapado dejó el archivo con un error de sintaxis. La caza lo dio por muerto (la suite «falló»), pero fallaba por no poder importar el paquete. Antes de correr la caza, cada mutante se compila con `ast.parse`.
-- **`SUM` en SQLite convierte el texto a `float`.** `amount_pen` se guarda como texto para no perder céntimos, pero `SUM(amount_pen)` lo suma como número de punto flotante: 10,10 + 20,20 da `30.299999999999997`. La referencia suma en Python con `Decimal`; los datos de `test_the_total_is_exact_to_the_cent` se eligieron para que el error se vea.
+- **Los datos del total se eligieron para el `float`.** Con montos que el `float` representa sin error (10,00 + 20,00), `m09` sobrevive; con 10,10 + 20,20 la suma en SQL da `30.299999999999997` ([BRIEF](BRIEF.md#sum-de-sqlite-suma-como-float)).
 - **`round()` de Python no redondea como el dominio.** Redondea los medios al par (`round(4.625, 2)` da `4.62`), igual que `ROUND_HALF_EVEN`. El dominio pide medio céntimo hacia arriba, y solo un dato que termina justo en medio céntimo (1,25 × 3,70) separa las dos reglas.
 
 ## 🔨 Rómpelo tú

@@ -70,7 +70,7 @@ Si falta Docker o una librería, la prueba no debe fallar: no hay un bug que rep
 - [PostgreSQL · Pattern Matching (`LIKE`, `ILIKE`)](https://www.postgresql.org/docs/18/functions-matching.html)
 
 ## 🧭 Escenario
-La demo está terminada. [`contacts.py`](demo/contacts.py) guarda contactos (nombre y edad) y los busca por parte del nombre, sin distinguir mayúsculas. Recibe una conexión de cualquiera de las dos bases y el marcador de parámetros de su driver: `?` en `sqlite3`, `%s` en `psycopg`.
+La demo está terminada. [`contacts.py`](demo/contacts.py) guarda contactos (nombre y edad) y los busca por parte del nombre, sin distinguir mayúsculas. Recibe una conexión de cualquiera de las dos bases y el marcador de parámetros de su *driver* (la librería que habla con esa base): `?` en `sqlite3`, `%s` en `psycopg`.
 
 | Archivo | Qué hay |
 |---|---|
@@ -104,7 +104,7 @@ La preparación de la **primera** prueba de PostgreSQL: ahí arranca el contened
 ### Experimento 2 · Mayúsculas y minúsculas
 Abre [`contacts.py`](demo/contacts.py) y, en `search`, cambia `lower(name) LIKE lower({self.p})` por `name LIKE {self.p}`. Corre otra vez el comando del experimento 1.
 
-🔮 **Predict first:** `test_search_ignores_case` busca `"ana"` y espera encontrar a `"Ana Torres"`. ¿En qué base falla sin los `lower`?
+🔮 **Predict first:** sin los `lower`, ¿falla también `test_search_finds_part_of_a_name`, que busca `"Torres"`? ¿Y `test_search_ignores_case`, que busca `"ana"`: en una base, en las dos o en ninguna?
 
 <details><summary>👀 Qué deberías ver</summary>
 
@@ -114,7 +114,7 @@ FAILED tests/test_contacts.py::test_search_ignores_case[postgres] - Assertion...
 1 failed, 5 passed
 ```
 
-Solo en PostgreSQL. En SQLite, `LIKE` no distingue mayúsculas de las letras ASCII (sí las de `Ñ` y `ñ`: `'Ñ' LIKE 'ñ'` da `0`); en PostgreSQL `LIKE` las distingue siempre, y para ignorarlas existe `ILIKE`. Una suite solo con SQLite habría pasado, y la búsqueda habría fallado en producción.
+`test_search_finds_part_of_a_name` sigue pasando: `"Torres"` ya viene con su mayúscula. `test_search_ignores_case` falla solo en PostgreSQL. En SQLite, `LIKE` no distingue mayúsculas de las letras ASCII (las del inglés, sin tildes ni eñes) ; sí distingue `Ñ` de `ñ`: `'Ñ' LIKE 'ñ'` da `0`; en PostgreSQL `LIKE` las distingue siempre, y para ignorarlas existe `ILIKE`. Una suite solo con SQLite habría pasado, y la búsqueda habría fallado en producción.
 
 Deja el archivo como estaba. Igual en PowerShell o Bash:
 
@@ -130,7 +130,7 @@ La tabla declara `age INTEGER NOT NULL`. La prueba del experimento intenta guard
 python -m pytest experiments/test_types.py
 ```
 
-🔮 **Predict first:** ¿qué base rechaza el texto?
+🔮 **Predict first:** con el texto `"veinte"` en una columna de números, cada base puede rechazarlo, convertirlo en un número o guardarlo como texto. ¿Qué hace cada una?
 
 <details><summary>👀 Qué deberías ver</summary>
 
@@ -159,7 +159,7 @@ Bash:
 DOCKER_HOST=tcp://127.0.0.1:1 python -m pytest -rs
 ```
 
-🔮 **Predict first:** ¿cuántas pruebas pasan, cuántas fallan y cuántas se saltan?
+🔮 **Predict first:** las seis pruebas piden la misma fixture, `contacts`. ¿Por qué las de PostgreSQL se pueden saltar sin que se salten también las de SQLite? Busca la respuesta en [`conftest.py`](demo/conftest.py) antes de correrlo.
 
 <details><summary>👀 Qué deberías ver</summary>
 
@@ -170,17 +170,17 @@ SKIPPED [1] tests\test_contacts.py:17: Docker is not running
 3 passed, 3 skipped
 ```
 
-Las tres de SQLite pasan y las tres de PostgreSQL se saltan, con el motivo que escribió la fixture. Ninguna falla: no tener Docker no es un bug de tu código. `-rs` es la opción que muestra los motivos de los saltos al final.
+Las tres de SQLite pasan y las tres de PostgreSQL se saltan, con el motivo que escribió la fixture. `contacts` solo pide `postgres_url` dentro de la rama de PostgreSQL, con `request.getfixturevalue("postgres_url")`: una fixture se puede pedir así, desde el código, en vez de en la firma. Las pruebas de SQLite nunca llegan a pedirla, y por eso su `pytest.skip` no las alcanza. Ninguna falla: no tener Docker no es un bug de tu código. `-rs` es la opción que muestra los motivos de los saltos al final.
 </details>
 
 ## 💼 En proyectos reales
 - **Prueba contra la base que usa producción**, con la misma versión mayor. Las pruebas rápidas de la lógica pueden seguir con dobles o SQLite; las del adaptador de la base, contra la real.
 - **Fija la etiqueta de la imagen** (`postgres:18.7-alpine`, no `postgres:latest`). Con `latest`, la suite cambia de versión de base el día que alguien publica una nueva, sin que nadie lo decida.
 - **En el CI, Docker suele estar disponible** (los runners de Linux de GitHub Actions lo traen), así que las pruebas que aquí se saltan sin Docker sí corren allí.
-- **testcontainers tiene módulos para muchos servicios**: MySQL, Redis, Kafka, MongoDB, servidores de correo de prueba. La idea es la misma de este lab.
+- **Testcontainers tiene módulos para muchos servicios**: MySQL, Redis, Kafka, MongoDB, servidores de correo de prueba. La idea es la misma de este lab.
 
 ## 🧹 Limpieza
-testcontainers borra el contenedor al final de cada corrida. Para comprobar que no quedó ninguno, igual en PowerShell o Bash:
+`testcontainers` borra el contenedor al final de cada corrida. Para comprobar que no quedó ninguno, igual en PowerShell o Bash:
 
 ```bash
 docker ps -a --filter label=org.testcontainers=true
@@ -192,12 +192,12 @@ La lista debe salir vacía. Las imágenes sí quedan en tu máquina, para que la
 docker image rm postgres:18.7-alpine testcontainers/ryuk:0.8.1
 ```
 
-`testcontainers/ryuk` es el pequeño contenedor que testcontainers usa para borrar los demás aunque pytest se cierre a la mitad.
+`testcontainers/ryuk` es el pequeño contenedor que `testcontainers` usa para borrar los demás aunque pytest se cierre a la mitad.
 
 ## 🆘 Pistas
 <details><summary>Las pruebas de PostgreSQL dan <code>DockerException: Invalid bind address format</code></summary>
 
-Si alguna vez usaste Testcontainers Desktop o Testcontainers para Java, puede existir un archivo `.testcontainers.properties` en tu carpeta de usuario con líneas como `tc.host=tcp\://127.0.0.1\:63573`. testcontainers para Python usa ese `tc.host` antes que tu Docker, y no entiende las barras de ese formato. Las tres pruebas de PostgreSQL terminan con *error* (no se saltan, porque Docker sí responde):
+Si alguna vez usaste Testcontainers Desktop o Testcontainers para Java, puede existir un archivo `.testcontainers.properties` en tu carpeta de usuario con líneas como `tc.host=tcp\://127.0.0.1\:63573`. `testcontainers` para Python usa ese `tc.host` antes que tu Docker, y no entiende las barras de ese formato. Las tres pruebas de PostgreSQL terminan con *error* (no se saltan, porque Docker sí responde):
 
 ```text
 E   docker.errors.DockerException: Invalid bind address format: port is required: tcp\://127.0.0.1\:63573

@@ -53,7 +53,7 @@ flowchart LR
     I[Pruebas de integración] -. Con lo real .-> A
 ```
 
-Las pruebas unitarias prueban el núcleo con un doble del adaptador: son muchas y rápidas. Las pruebas de integración prueban **el adaptador contra lo real**: son pocas, y cada una revisa una forma en que el encaje puede fallar. Así el doble del núcleo deja de mentir sin control, porque otra prueba confirma lo que el doble supone. Es la recomendación del lab 1.5 vista desde el otro lado: «no hagas mock de lo que no es tuyo; envuélvelo en una clase tuya pequeña». Esa clase pequeña es el adaptador, y es la que se prueba con lo real.
+Las pruebas unitarias prueban el núcleo con un doble del adaptador: son muchas y rápidas. Las pruebas de integración prueban **el adaptador contra lo real**: son pocas, y cada una revisa una forma en que el encaje puede fallar. Así el doble del núcleo deja de mentir sin control, porque otra prueba confirma lo que el doble supone. Es la recomendación del lab 1.5 vista desde el otro lado: no hagas un mock de lo que no es tuyo, sino envuélvelo en una clase tuya pequeña. Esa clase pequeña es el adaptador, y es la que se prueba con lo real.
 
 ## Real o doble: cómo decidir
 No hay una respuesta única. Para cada dependencia, hazte estas preguntas:
@@ -82,7 +82,7 @@ Hay cuatro estrategias, y una suite suele combinarlas:
 |---|---|---|
 | **Uno nuevo por prueba** | Cada prueba recibe su propia carpeta o su propia base vacía | Cuando crearlo es barato (ya lo hiciste con `tmp_path` en el lab 1.5) |
 | **Limpiar al terminar** | La prueba borra lo que creó | Cuando crearlo es caro y la limpieza es simple |
-| **Deshacer al terminar** | Todo lo de la prueba ocurre en una transacción que al final se deshace (*rollback*) | Bases de datos: es rápido y no deja rastro |
+| **Deshacer al terminar** | Todo lo de la prueba ocurre en una **transacción** (un grupo de cambios que la base aplica todos o ninguno; lab 2.3) que al final se deshace (*rollback*) | Bases de datos: es rápido y no deja rastro |
 | **Compartir solo lo que nadie modifica** | Un recurso creado una vez, de solo lectura | Datos de consulta, un servidor arrancado una vez (el `scope` del lab 1.4) |
 
 La limpieza tiene una exigencia difícil: debe ocurrir **también cuando la prueba falla**. Una prueba que se cae en el Assert y nunca llega a su última línea no puede limpiar ahí. En el lab 2.3 verás cómo lo resuelve pytest.

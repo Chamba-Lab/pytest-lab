@@ -5,12 +5,17 @@ The first test is an example of how to import the application; the rest of the s
 
 import sqlite3
 
+import pytest
+
 from expenses.store import ExpenseStore
 
 
-def test_a_new_store_is_empty():
+@pytest.fixture
+def store():
     conn = sqlite3.connect(":memory:")
+    yield ExpenseStore(conn)
+    conn.close()  # runs even when the test fails (lab 2.3)
 
-    assert ExpenseStore(conn).expenses() == []
 
-    conn.close()
+def test_a_new_store_is_empty(store):
+    assert store.expenses() == []

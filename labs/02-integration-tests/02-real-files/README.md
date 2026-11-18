@@ -19,7 +19,7 @@ Con el entorno virtual activo, en la carpeta **`starter/`** de este lab.
 ## 🧠 Conceptos
 
 ### Datos de prueba junto a las pruebas (*test data*)
-Para probar un lector de CSV podrías armar el texto dentro de la prueba, línea por línea. Con siete filas ya cuesta leerlo, y además es el CSV que **tú** imaginaste, no el que exporta una planilla. La idea es guardar un archivo real de ejemplo en la carpeta de pruebas, revisarlo una vez y usarlo desde las pruebas que lo necesiten:
+Para probar un lector de CSV podrías armar el texto dentro de la prueba, línea por línea. Con siete filas ya cuesta leerlo, y además es el CSV que **tú** imaginaste, no el que exporta una hoja de cálculo. La idea es guardar un archivo real de ejemplo en la carpeta de pruebas, revisarlo una vez y usarlo desde las pruebas que lo necesiten:
 
 ```text
 tests/
@@ -62,7 +62,7 @@ path.read_text(encoding="utf-8")     # el texto decodificado: 'Huánuco\n'
 
 Hay dos decisiones que el código debe tomar a propósito, porque si no las toma, las toma el sistema:
 
-- **La codificación.** Sin `encoding=`, Python usa la del sistema. En Windows, con Python 3.12, es `cp1252`, y leer ese archivo UTF-8 da `'HuÃ¡nuco'`. Desde Python 3.15 la codificación por defecto es UTF-8 en todos los sistemas ([PEP 686](https://peps.python.org/pep-0686/)), pero tu código puede correr en un Python anterior: escribe siempre `encoding="utf-8"`.
+- **La codificación.** Sin `encoding=`, Python usa la del sistema. En Windows, con Python 3.12, es `cp1252`, y leer ese archivo UTF-8 da `'HuÃ¡nuco'`. Desde Python 3.15 la codificación por defecto es UTF-8 en todos los sistemas ([PEP 686](https://peps.python.org/pep-0686/); un PEP es una propuesta de cambio aprobada para Python), pero tu código puede correr en un Python anterior: escribe siempre `encoding="utf-8"`.
 - **Los saltos de línea.** Windows termina cada línea con dos caracteres, `\r\n`; Linux y macOS, con uno, `\n`. Al escribir en modo texto en Windows, Python convierte cada `\n` en `\r\n`, salvo que digas otra cosa con `newline="\n"`.
 
 ### Los bordes del disco
@@ -137,7 +137,7 @@ python -m pytest
 | Código | Qué hace |
 |---|---|
 | `Path(__file__).parent` | La carpeta del archivo `.py` que se está ejecutando |
-| `path.read_bytes()` | El contenido como `bytes`, sin decodificar ni convertir nada |
+| `path.read_bytes()` | El contenido como `bytes`, sin decodificar |
 | `path.read_text(encoding="utf-8")` | El contenido como texto, decodificado con UTF-8 |
 | `path.write_text(texto, encoding="utf-8", newline="\n")` | Escribe el texto en UTF-8 y con `\n` como salto de línea en cualquier sistema |
 | `path.parent.mkdir(parents=True, exist_ok=True)` | Crea la carpeta y las que falten antes de ella; si ya existe, no hace nada |
@@ -154,7 +154,7 @@ Cuando el formato del reporte cambie a propósito, tendrás que actualizar `expe
 ## 🆘 Pistas
 <details><summary>Pista 1 · dirección</summary>
 
-Tarea 1: `DATA` se arma con `Path(__file__)`. Tarea 2: el reporte se escribe con `write_report(load_members(...), salida)`, y la comparación es un solo `assert`.
+Tarea 1: `DATA` se arma con `Path(__file__)`. Tarea 2: el reporte se escribe con `write_report(load_members(...), output)`, y la comparación es un solo `assert`.
 </details>
 
 <details><summary>Pista 2 · más concreta</summary>
@@ -180,7 +180,7 @@ Se ejecutó con pytest 9.2.0; el CI verifica cada lab en Python 3.12 y 3.15.
 E       FileNotFoundError: [Errno 2] No such file or directory: 'tests\\data\\members.csv'
 ```
 
-Una ruta relativa depende de dónde estés parado; `Path(__file__).parent` depende de dónde está el archivo de pruebas, que no cambia. Con `DATA` armada así, las cinco pruebas pasan desde las dos carpetas.
+Una ruta relativa depende de la carpeta desde donde corres el comando; `Path(__file__).parent` depende de dónde está el archivo de pruebas, que no cambia. Con `DATA` armada así, las cinco pruebas pasan desde las dos carpetas.
 
 Las dos pruebas de esta tarea tienen trabajo distinto: la del primer miembro mata solo a `m1`, y la del nombre con coma mata a `m1` y a `m2`. Si el CSV no tuviera un nombre entre comillas, `m2` sobreviviría: los datos de prueba deciden qué bugs puedes ver.
 

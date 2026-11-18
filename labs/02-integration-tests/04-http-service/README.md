@@ -93,7 +93,7 @@ La caza de mutantes del [lab 1.2](../../01-unit-tests/02-first-tests/README.md).
 | `m2-no-api-key` | No manda el encabezado `X-Api-Key` | 1 |
 | `m3-reads-wrong-field` | Lee la temperatura del campo `temp` en vez de `temp_c` | 1 |
 | `m4-not-found-is-unavailable` | Trata el 404 como cualquier otro error | 2 |
-| `m5-errors-parsed` | No revisa el código de estado: intenta leer el JSON de cualquier respuesta | 2 |
+| `m5-errors-parsed` | No revisa el código de estado (el número de la respuesta: 200 es «bien», 404 «no existe», 500 «error del servidor»): intenta leer el JSON de cualquier respuesta | 2 |
 | `m6-no-timeout` | Hace la petición sin `timeout` | 3 |
 | `m7-network-errors-escape` | Deja escapar los errores de red de `requests` en vez de lanzar `WeatherUnavailable` | 3 |
 
@@ -111,7 +111,7 @@ python -m pytest
 - [ ] En `conftest.py`, escribe la fixture `client`: pide `httpserver` y devuelve un `WeatherClient` con `httpserver.url_for("/")`, `api_key="test-key-not-secret"` y `timeout=0.5`.
 - [ ] En `test_reads_the_current_weather(httpserver, client)`: registra una expectativa para `/v1/current` que exija `city=Lima` y la clave del cliente (`client.api_key`) en `X-Api-Key`, y que responda `{"city": "Lima", "temp_c": 19.5}`. Comprueba el `Reading` completo.
 
-🔮 **Predict first:** si tu expectativa no exigiera el encabezado, ¿qué mutante sobreviviría? ¿Y si no exigiera la ciudad?
+🔮 **Predict first:** `m3-reads-wrong-field` manda una petición perfecta. ¿La mata tu expectativa, o algo más? ¿Y qué mutantes dejaría vivos una expectativa que solo exigiera la ruta?
 
 ### Tarea 2 · Errores HTTP
 **Meta:** que cada error del servicio llegue como la excepción correcta. **La validan:** `[m4-not-found-is-unavailable]` y `[m5-errors-parsed]`.
@@ -142,7 +142,7 @@ python -m pytest
 
 ## 💼 En proyectos reales
 - **Revisa que el servidor no recibió nada raro.** Una petición que no coincide con ninguna expectativa no rompe la prueba por sí sola (ver la respuesta de la tarea 2). Llama a `httpserver.check_assertions()` al final de las pruebas que dependen de un error.
-- **`localhost` puede costar medio segundo por petición en Windows.** Antes de fijar `httpserver_listen_address`, el servidor escuchaba en `localhost` y cada petición del cliente tardaba 0,5 s, justo su `timeout`. Windows prueba primero la dirección IPv6 (`::1`), donde no escucha nadie, espera, y recién después usa `127.0.0.1`. Con el servidor en `127.0.0.1`, las mismas pruebas pasaron de 3,6 s a 1,6 s.
+- **`localhost` puede costar medio segundo por petición en Windows.** Antes de fijar `httpserver_listen_address`, el servidor escuchaba en `localhost` y cada petición del cliente tardaba 0,5 s, justo su `timeout`. Windows prueba primero la dirección IPv6 de tu máquina (`::1`; IPv6 es la versión nueva de las direcciones de internet), donde no escucha nadie, espera, y solo después usa `127.0.0.1`. Con el servidor en `127.0.0.1`, las mismas pruebas pasaron de 3,6 s a 1,6 s.
 - **Ponle `timeout` a toda petición en producción.** Sin él, un servicio colgado deja hilos y procesos esperando para siempre. Hay herramientas de análisis de código, como el linter Ruff (regla `S113`), que marcan las peticiones sin `timeout`.
 - **Los dobles del transporte existen**, como [responses](https://pypi.org/project/responses/) o [respx](https://pypi.org/project/respx/): reemplazan a `requests` sin abrir ninguna conexión. Son más rápidos, pero no cruzan la red, así que no ven un `timeout` mal puesto ni un puerto cerrado.
 - **Contra el servicio real de verdad**, algunos equipos corren pocas pruebas, aparte y con una marca (lab 1.4), contra el entorno de prueba (*sandbox*) del proveedor, para confirmar que su servidor de prueba sigue diciendo lo mismo que el servicio.
@@ -172,13 +172,13 @@ Tarea 3: `httpserver.expect_request("/v1/current").with_post_hook(Delay(1.5)).re
 
 Se ejecutó con pytest 9.2.0; el CI verifica cada lab en Python 3.12 y 3.15.
 
-**Tarea 1.** Sin el encabezado en la expectativa sobrevive `m2-no-api-key`; sin la ciudad, `m1-wrong-query-name`. En los dos casos el servidor responde a la petición mala como si fuera buena, y el cliente recibe el JSON. Cuando la expectativa sí los exige, la petición del mutante no coincide, el servidor no la contesta con lo registrado y el cliente lo nota:
+**Tarea 1.** A `m3` no lo mata la expectativa, sino tu `assert`: la petición es correcta, pero lee un campo que el servicio no manda. Con una expectativa que solo exige la ruta sobreviven `m1-wrong-query-name` y `m2-no-api-key`. En los dos casos el servidor responde a la petición mala como si fuera buena, y el cliente recibe el JSON. Cuando la expectativa sí los exige, la petición del mutante no coincide, el servidor no la contesta con lo registrado y el cliente lo nota:
 
 ```text
 E           weather.WeatherUnavailable: the service answered 500
 ```
 
-`m3` muere por otra razón: lee un campo que el servicio no manda (`KeyError: 'temp'`), el mismo bug del ejemplo del lab 2.1. Aquí lo atrapa una prueba porque la respuesta tiene el formato del servicio, no el que el cliente supone.
+`m3` falla con `KeyError: 'temp'`, el mismo bug del ejemplo del lab 2.1. Aquí lo atrapa una prueba porque la respuesta tiene el formato del servicio, no el que el cliente supone.
 
 **Tarea 2.** Sí, pasa. Una petición que no coincide con ninguna expectativa recibe un **500** del propio servidor de prueba, con el texto `No handler found for request`, y el cliente lo convierte en `WeatherUnavailable`, que es justo lo que la prueba esperaba. La prueba pasa por la razón equivocada: comprueba «nadie registró nada», no «el servicio falló». Con `httpserver.check_assertions()` al final, falla y lo dice:
 
@@ -186,7 +186,7 @@ E           weather.WeatherUnavailable: the service answered 500
 E           AssertionError: No handler found for request <Request 'http://127.0.0.1:63368/v1/current?city=Lima' [GET]> with data b''.
 ```
 
-`m5` muere en la versión buena porque intenta leer como JSON el texto del error: `requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`.
+Con la prueba bien escrita (con el 500 registrado), `m5` muere porque intenta leer como JSON el texto del error: `requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`.
 
 **Tarea 3.** En Windows, alrededor de **0,5 s**, lo mismo que la prueba lenta:
 
@@ -195,10 +195,12 @@ E           AssertionError: No handler found for request <Request 'http://127.0.
 0.50s call     tests/test_weather.py::test_a_service_that_is_down_is_unavailable
 ```
 
-En Windows, una conexión a un puerto cerrado de tu propia máquina no se rechaza al instante: el sistema reintenta durante unos 2 s (lo medimos sin `timeout`: 2,03 s). Con `timeout=0.5`, `requests` se rinde antes y lanza `ConnectTimeout`, que es a la vez un `Timeout` y un `ConnectionError`. En Linux, el rechazo llegó en 0,02 s. Por eso `m7` deja escapar este error del sistema:
+En Windows, una conexión a un puerto cerrado de tu propia máquina no se rechaza al instante: el sistema reintenta durante unos 2 s (lo medimos sin `timeout`: 2,03 s). Con `timeout=0.5`, `requests` se rinde antes y lanza `ConnectTimeout`, que es a la vez un `Timeout` y un `ConnectionError`. En Linux, el rechazo llegó en 0,02 s.
+
+`m7` muere en las dos pruebas de esta tarea: deja escapar `requests.exceptions.ReadTimeout` en la lenta y `ConnectTimeout` en la caída:
 
 ```text
-E           urllib3.exceptions.ConnectTimeoutError: (<HTTPConnection(host='127.0.0.1', port=56939) at 0x...>, 'Connection to 127.0.0.1 timed out. (connect timeout=0.5)')
+E                   requests.exceptions.ConnectTimeout: HTTPConnectionPool(host='127.0.0.1', port=55257): Max retries exceeded with url: /v1/current?city=Lima (Caused by ConnectTimeoutError(...))
 ```
 
 Y `m6`, sin `timeout`, espera los 1,5 s del servidor, recibe la respuesta y no lanza nada: `Failed: DID NOT RAISE WeatherUnavailable`.

@@ -6,7 +6,7 @@
 La aplicación ya responde que sí. Tu trabajo es la otra mitad: **una suite de integración que se dé cuenta el día en que deje de ser así.**
 
 ## Contexto
-Una persona registra los gastos de sus viajes en una planilla y la exporta como CSV, con montos en soles y en otras monedas. `expenses` lee ese archivo, convierte cada monto a soles (PEN) con un **servicio de tipos de cambio** por HTTP y guarda todo en una base **SQLite**, para sumar después cuánto gastó.
+Una persona registra los gastos de sus viajes en una hoja de cálculo y la exporta como CSV, con montos en soles y en otras monedas. `expenses` lee ese archivo, convierte cada monto a soles (PEN) con un **servicio de tipos de cambio** por HTTP y guarda todo en una base **SQLite**, para sumar después cuánto gastó.
 
 La aplicación funciona y está en [`reference/src/expenses/`](reference/src/expenses/). Sus tres piezas hablan con algo real: un archivo, una base de datos y un servicio. Las pruebas unitarias con dobles no pueden decir si encajan (lab [2.1](../01-what-changes/CONCEPT.md)). Te piden **la suite de integración**: cada pieza probada contra lo real, y el importador con las tres juntas. No cambias la aplicación: la pruebas.
 
@@ -54,8 +54,8 @@ date,description,amount,currency
 | Módulo | Promete |
 |---|---|
 | [`rates.py`](reference/src/expenses/rates.py) · `RatesClient(base_url, timeout=2.0)` | `rate_to_pen(currency)` devuelve el tipo de cambio como `Decimal` exacto. Un 404 → `UnknownCurrency`; cualquier otro error, un `timeout` o un servicio caído → `RatesUnavailable` |
-| [`store.py`](reference/src/expenses/store.py) · `ExpenseStore(conn)` | Crea sus tablas en la conexión que recibe. `save_import(fingerprint, file_name, expenses)` guarda la importación y sus gastos en **una sola transacción, confirmada**. `expenses()` los devuelve en el orden en que se guardaron, con los `Decimal` exactos. `total_pen()` suma exacto al céntimo. `was_imported(fingerprint)` dice si ya se importó |
-| [`importer.py`](reference/src/expenses/importer.py) · `import_file(path, store, rates)` | Importa el archivo y devuelve cuántos gastos guardó. Pide **un solo tipo de cambio por moneda**, aunque la moneda aparezca en varias líneas, y ninguno para `PEN`. Una línea inválida → `ImportFailed` con un mensaje que empieza con `line N:`. Un error del servicio sale tal cual (`RatesUnavailable`, `UnknownCurrency`). Un archivo repetido → `DuplicateImport` |
+| [`store.py`](reference/src/expenses/store.py) · `ExpenseStore(conn)` | Crea sus tablas en la conexión que recibe. `fingerprint` es la huella del contenido del archivo (el importador usa su SHA-256, un resumen que cambia si cambia un solo byte); en las pruebas del store, cualquier texto sirve. `save_import(fingerprint, file_name, expenses)` guarda la importación y sus gastos en **una sola transacción, confirmada**. `expenses()` los devuelve en el orden en que se guardaron, con los `Decimal` exactos. `total_pen()` suma exacto al céntimo. `was_imported(fingerprint)` dice si ya se importó |
+| [`importer.py`](reference/src/expenses/importer.py) · `import_file(path, store, rates)` | Importa el archivo y devuelve cuántos gastos guardó. Pide **un solo tipo de cambio por moneda**, aunque la moneda aparezca en varias líneas, y ninguno para `PEN`. Una línea inválida → `ImportFailed` con un mensaje que empieza con `line N:`, donde N cuenta las líneas del archivo: el encabezado es la línea 1 y las líneas en blanco también cuentan. Un error del servicio sale tal cual (`RatesUnavailable`, `UnknownCurrency`). Un archivo repetido → `DuplicateImport` |
 
 ## Tu entregable
 Una suite de **pruebas de integración** en [`your-suite/tests/`](your-suite/tests/), que se corre desde [`your-suite/`](your-suite/) con `python -m pytest`. Ya trae la configuración que importa la aplicación desde `reference/src`, la fixture `httpserver_listen_address` del lab 2.4 en su `conftest.py`, y una primera prueba de ejemplo.
@@ -89,12 +89,12 @@ El proyecto se acepta con una **caza de mutantes de toda la aplicación**, como 
 | Un CSV de ejemplo junto a las pruebas, encontrado con `Path(__file__).parent`, y archivos de cada prueba en `tmp_path` | [2.2](../02-real-files/README.md) |
 | Una base SQLite nueva por prueba con una fixture con `yield`; datos sembrados conocidos | [2.3](../03-real-database/README.md) |
 | Después de cada error, comprobar **el estado de la base**, no solo la excepción | [2.3](../03-real-database/README.md) |
-| Un servidor de prueba local con expectativas, errores HTTP, `Delay` y un puerto cerrado | [2.4](../04-http-service/README.md) |
+| Un servidor de prueba local con expectativas, errores HTTP, `Delay` y un puerto cerrado (copia la fixture `down_url` del `conftest.py` del 2.4) | [2.4](../04-http-service/README.md) |
 | Fixtures compartidas en `conftest.py`, y una fixture que devuelve una función para escribir cada CSV | [1.4](../../01-unit-tests/04-organize-suite/README.md) y [1.P](../../01-unit-tests/project-split-bill/BRIEF.md#lo-nuevo-de-este-proyecto) |
 | `Decimal` comparado exacto, nunca con `approx` | [1.2](../../01-unit-tests/02-first-tests/README.md) |
 
 ## Lo nuevo de este proyecto
-Tres herramientas que los labs no usaron.
+Cuatro cosas que los labs no enseñaron.
 
 ### Contar las peticiones que recibió el servidor (`httpserver.log`)
 `httpserver.log` es la lista de todas las peticiones que recibió el servidor de prueba en esta prueba, cada una con su respuesta. Sirve para comprobar **cuántas veces** te llamó el cliente:
@@ -113,6 +113,9 @@ Para probar «falla y después funciona», `expect_oneshot_request` registra una
 httpserver.expect_oneshot_request("/ping").respond_with_data("busy", status=503)  # la primera vez
 httpserver.expect_request("/ping").respond_with_data("pong")                      # las siguientes
 ```
+
+### `SUM` de SQLite suma como `float`
+La tabla guarda los montos como texto para no perder céntimos. Pero si sumas en SQL, `SUM(amount_pen)` convierte cada texto a número de punto flotante: 10,10 + 20,20 da `30.299999999999997`, no `30.30`. Por eso `total_pen` suma en Python, con `Decimal`. Para que una prueba lo note, sus datos tienen que producir ese error de redondeo.
 
 ### Cerrar no es confirmar
 En `sqlite3`, `conn.close()` **no confirma** lo pendiente: lo que no se confirmó con `commit()` (o con `with conn:`) se pierde al cerrar. Una base `:memory:` y una sola conexión no lo muestran, porque la misma conexión ve sus propios cambios sin confirmar. Para comprobar que algo quedó guardado de verdad, usa una base en un archivo de `tmp_path`, cierra la conexión y ábrela de nuevo.
