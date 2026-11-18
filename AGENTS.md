@@ -16,6 +16,8 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 
 ## Working agreement
 - Chat in the learner's language; lab content in Spanish (`language.content = "es"`, neutral Spanish, no local slang); code, identifiers, folders and commits in English.
+- Terms of art stay in English, glossed in Spanish the first time (fixture, mock, test suite, Arrange-Act-Assert), and each new one is added to `GLOSSARY.md` with its owner lab. Section titles use the Spanish column of StudyForge's reference table (`references/writing.md`); *Command dissection* and *Predict first* stay in English.
+- Every new concept goes problem → idea → minimal example → name, before a task needs it, and the idea comes before pytest's way of writing it.
 - Decide and recommend; do not hand decisions back. Scope, depth and anything outward-facing are the maintainer's call.
 - One lab at a time. Labs stay 🟨 `built` until a learner solved them and their feedback was applied; only then ✅ `done`.
 - Report outcomes faithfully: what passed, what failed, what was not run.
@@ -30,6 +32,7 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 ## Stack specifics
 - **One virtual environment** at the repository root (`.venv`, from `requirements.txt`). Each lab variant has its own `pyproject.toml` with only `[tool.pytest]` (native TOML configuration, pytest 9+) and `pythonpath = ["."]`; no packaging.
 - **Projects are atomic:** `project-*/reference` declares its own dependencies in its `pyproject.toml` and does not rely on lab code.
+- **Projects are turned around too:** `reference/` holds the finished application and the reference suite; the learner writes a suite in `your-suite/`. `acceptance/test_suite_hunt.py` is a mutant hunt over a whole suite (`SPLITBILL_SUITE`, default `../reference`): it empties the suite's `pythonpath` with `-o pythonpath=` and imports the application from `PYTHONPATH`, so it can swap in each package copy in `acceptance/mutants/<id>/`.
 - **Testing labs are turned around:** the production code is finished and the learner writes tests. Each challenge validates the learner's tests with a **mutant hunt** (`tests/test_mutant_hunt.py`): the learner's test file must pass against the real module and fail against each mutant in `tests/mutants/<id>/`. Starter test stubs call `pytest.skip("TODO …")`, so a starter is red only through the hunt, and each task turns its own mutants green (progressive check works).
 - Run commands with `python -m pytest`, never bare `pytest` (it picks the active interpreter and puts the current folder on `sys.path` consistently).
 - Verify a lab: activate the virtual environment, then `python tools/verify.py --lab <ID>`.

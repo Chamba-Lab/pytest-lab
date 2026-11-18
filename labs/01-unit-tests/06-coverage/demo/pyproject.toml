@@ -1,0 +1,4 @@
+# pytest configuration for this demo (native TOML table, pytest 9+). No packaging.
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = ["."]
