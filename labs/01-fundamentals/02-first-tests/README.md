@@ -58,11 +58,11 @@ pwd
 
 ```mermaid
 flowchart LR
-    T[tus pruebas] --> R{grades.py real}
-    R -- pasan --> M{cada mutante}
-    R -- fallan --> X[arregla tus pruebas primero]
-    M -- fallan --> K[💀 mutante muerto]
-    M -- pasan --> S[🧟 mutante vivo:<br/>falta una prueba]
+    T[Tus pruebas] --> R{grades.py real}
+    R -- Pasan --> M{Cada mutante}
+    R -- Fallan --> X[Arregla tus pruebas primero]
+    M -- Fallan --> K[💀 Mutante muerto]
+    M -- Pasan --> S[🧟 Mutante vivo:<br/>falta una prueba]
 ```
 
 | Mutante | Bug sembrado | Lo mata la tarea |

@@ -19,12 +19,12 @@ Un grupo de amigos comparte gastos: una cena, un viaje, un regalo. Cada gasto lo
 
 ```mermaid
 flowchart LR
-    CSV[(gastos.csv)] --> R[leer y validar]
-    R -- línea inválida --> E[error en stderr<br/>código 2]
-    R --> P[repartir cada gasto<br/>en céntimos]
-    P --> B[saldos por persona]
+    CSV[(gastos.csv)] --> R[Leer y validar]
+    R -- Línea inválida --> E[Error en stderr<br/>código 2]
+    R --> P[Repartir cada gasto<br/>en céntimos]
+    P --> B[Saldos por persona]
     B --> O1[balances]
-    B --> S[transferencias] --> O2[settle]
+    B --> S[Transferencias] --> O2[settle]
 ```
 
 ## Contrato

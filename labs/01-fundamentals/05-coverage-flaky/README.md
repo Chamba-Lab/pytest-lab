@@ -52,17 +52,17 @@ La `demo/` está terminada y funciona. No hay nada que completar: vas a medirla 
 
 ```mermaid
 flowchart TD
-    A[weight_kg ≤ 0?] -- sí --> E[ValueError]
-    A -- no --> B[cost = 5]
+    A[weight_kg ≤ 0?] -- Sí --> E[ValueError]
+    A -- No --> B[cost = 5]
     B --> C{weight_kg > 2?}
-    C -- sí --> C2[cost += kilos extra × 1,5]
-    C -- no --> D
+    C -- Sí --> C2[cost += kilos extra × 1,5]
+    C -- No --> D
     C2 --> D{express?}
-    D -- sí --> D2[cost × 2]
-    D -- no --> F
+    D -- Sí --> D2[cost × 2]
+    D -- No --> F
     D2 --> F{member y cost > 20?}
-    F -- sí --> F2[cost = 0]
-    F -- no --> G[return]
+    F -- Sí --> F2[cost = 0]
+    F -- No --> G[return]
     F2 --> G
 ```
 
