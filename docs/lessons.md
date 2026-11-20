@@ -97,3 +97,6 @@ Las secciones de cada lab usan los IDs de la primera versión del bloque 1: el v
 - **Ningún lab cambió.** La nota de 1.4.1 solo toca `docs/decisions.md`: la tabla por biblioteca de 1.4.0 se cambió por las excepciones que necesitan una razón. Versiones, fechas y descargas envejecían con cada actualización, y el CI ya vigila las vulnerabilidades. `verify.py --strict` dio 13 labs en `ok`, 0 problemas, y `pip-audit` no encontró vulnerabilidades en los cuatro `requirements*.txt`.
 - **La duda de psycopg quedó resuelta por la regla nueva:** una licencia *copyleft* débil instalada sin modificar está bien y se anota. Al revisar las licencias de todo lo que se instala apareció otra igual, certifi (MPL-2.0), que llega con requests.
 - **En Git Bash, una ruta `C:/...` no sirve para anteponer un entorno al `PATH`.** El `:` de la unidad parte la ruta en dos, y `python` siguió siendo el de Anaconda. Usa la forma `/c/...` y comprueba con `python -c "import sys; print(sys.prefix)"` antes de instalar nada.
+
+## Actualización a StudyForge 1.4.2
+- **Ningún lab ni archivo del repositorio cambió.** La nota de 1.4.2 pide comprobar el entorno antes de instalar nada: `sys.prefix` apuntaba al `.venv` del repositorio, `requirements.txt` se instaló ahí y `verify.py --strict` dio `0 problem(s), 0 warning(s)` en los 14 labs. `tools/verify.py` ya era igual al de 1.4.2.
