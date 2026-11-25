@@ -50,7 +50,7 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 ## Upgrading the stack
 1. Read the pytest changelog and the deprecations page; check Python support.
    For a new library, first apply StudyForge's checklist for choosing a dependency (`references/dependencies.md`) and run `pip-audit -r <file>`; record why in `docs/decisions.md`.
-2. Change `requirements.txt`, `SETUP.md`, `SYLLABUS.md`, this file and the CI matrix.
+2. Change `requirements.txt`, `SETUP.md`, `SYLLABUS.md`, `TUTOR.md` (it names the versions), this file and the CI matrix.
 3. Run `python tools/verify.py` on every supported Python; re-check every claim that quotes the old version (outputs, messages).
 4. Commit `chore: upgrade pytest to <version>`.
 
