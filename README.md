@@ -13,6 +13,9 @@ El camino sube la pirámide de pruebas en cuatro bloques: pruebas unitarias, de 
 2. Guarda tu trabajo en tu propia rama (`git switch -c solutions/tu-nombre`) o en un fork.
 3. Abre el [SYLLABUS.md](SYLLABUS.md) y empieza por el lab 1.1. Si un término no te suena, búscalo en el [glosario](GLOSSARY.md).
 
+> [!TIP]
+> ¿No usas un agente de código? Estudia con Claude, ChatGPT o Gemini como tutor: mira [TUTOR.md](TUTOR.md).
+
 ## 🧭 Cómo funcionan los labs
 - 💭 **Concepto:** lees, luego respondes la autoevaluación.
 - 🧩 **Reto:** el código ya funciona; **tú escribes las pruebas**. Una *caza de mutantes* las pone a prueba: deben pasar con el código real y fallar contra versiones con bugs sembrados. `solution/` está a la vista a propósito: tú decides cuándo mirar.
