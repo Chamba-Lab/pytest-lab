@@ -108,3 +108,6 @@ Las secciones de cada lab usan los IDs de la primera versión del bloque 1: el v
 ## Actualización a StudyForge 1.6.0
 - **Llegó `TUTOR.md`, para quien estudia en un chat sin agente.** Se llenó en español desde la plantilla, con las versiones de `requirements.txt` y el enlace al formulario *Feedback de lab*. Como el chat no ve el repositorio, el rol dice que en los retos la persona escribe las pruebas y una caza de mutantes las valida, y la parte de soluciones nombra también `demo/` de las exploraciones. `README.md` lo enlaza bajo *Empieza* y *Talking with the learner* de `AGENTS.md` suma las predicciones, la pregunta para comprobar que entendió y la regla de mantener `TUTOR.md` al día.
 - **La regla de técnicas ofensivas no aplica.** El camino no enseña ataques: el 2.3 solo menciona *SQL injection* como la razón para usar parámetros, sin atacar nada.
+
+## Actualización a StudyForge 1.6.1
+- **Nada nuevo que aplicar.** El único cambio para repositorios (listar `TUTOR.md` en *Upgrading the stack* de `AGENTS.md`) ya entró con la actualización a 1.6.0, porque esa corrida encontró el hueco que la 1.6.1 corrige. Solo cambia la versión declarada.
