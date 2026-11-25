@@ -16,11 +16,21 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 
 ## Working agreement
 - Chat in the learner's language; lab content in Spanish (`language.content = "es"`, neutral Spanish, no local slang); code, identifiers, folders and commits in English.
-- Terms of art stay in English, glossed in Spanish the first time (fixture, mock, test suite, Arrange-Act-Assert), and each new one is added to `GLOSSARY.md` with its owner lab. Section titles use the Spanish column of StudyForge's reference table (`references/writing.md`); *Command dissection* and *Predict first* stay in English.
+- Terms of art stay in English, glossed in Spanish the first time (fixture, mock, test suite, Arrange-Act-Assert; StudyForge `references/didactics.md`), and each new one is added to `GLOSSARY.md` with its owner lab. Section titles use the Spanish column of StudyForge's reference table (`references/writing.md`); *Command dissection* and *Predict first* stay in English.
 - Every new concept goes problem → idea → minimal example → name, before a task needs it, and the idea comes before pytest's way of writing it.
 - Decide and recommend; do not hand decisions back. Scope, depth and anything outward-facing are the maintainer's call.
 - One lab at a time. Labs stay 🟨 `built` until a learner solved them and their feedback was applied; only then ✅ `done`.
 - Report outcomes faithfully: what passed, what failed, what was not run.
+
+## Talking with the learner
+- Answer first, in a few lines. A longer explanation goes into the lab (Concepts or `CONCEPT.md`); point to it instead of pasting it.
+- One question at a time. At most three when unavoidable, numbered, each with options and a recommended answer.
+- Predictions are the learner's: never give the answer to a 🔮 prediction, even after a guess; ask them to run it, then explain what they got.
+- A hint before the solution: a question, then a more concrete hint, full code only when asked. Do not edit the learner's code unless asked.
+- Check understanding with one question, not a quiz.
+- Say only what changes for the learner; no recap of everything you read or ran.
+- End every reply with the next step: "Tu siguiente paso: …".
+- `TUTOR.md` carries these rules for learners who study in a chat; when one of them changes, change it there too.
 
 ## Repository rules
 - Layout, names and IDs follow StudyForge (`labs/NN-block/NN-slug`, `project-<domain>` last in its block; IDs freeze once `built`).
@@ -40,7 +50,7 @@ This repository is a study path built with [StudyForge](https://github.com/Chamb
 ## Upgrading the stack
 1. Read the pytest changelog and the deprecations page; check Python support.
    For a new library, first apply StudyForge's checklist for choosing a dependency (`references/dependencies.md`) and run `pip-audit -r <file>`; record why in `docs/decisions.md`.
-2. Change `requirements.txt`, `SETUP.md`, `SYLLABUS.md`, this file and the CI matrix.
+2. Change `requirements.txt`, `SETUP.md`, `SYLLABUS.md`, `TUTOR.md` (it names the versions), this file and the CI matrix.
 3. Run `python tools/verify.py` on every supported Python; re-check every claim that quotes the old version (outputs, messages).
 4. Commit `chore: upgrade pytest to <version>`.
 
