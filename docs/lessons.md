@@ -100,3 +100,7 @@ Las secciones de cada lab usan los IDs de la primera versión del bloque 1: el v
 
 ## Actualización a StudyForge 1.4.2
 - **Ningún lab ni archivo del repositorio cambió.** La nota de 1.4.2 pide comprobar el entorno antes de instalar nada: `sys.prefix` apuntaba al `.venv` del repositorio, `requirements.txt` se instaló ahí y `verify.py --strict` dio `0 problem(s), 0 warning(s)` en los 14 labs. `tools/verify.py` ya era igual al de 1.4.2.
+
+## Actualización a StudyForge 1.5.0
+- **Solo cambió `AGENTS.md`.** La nota de 1.5.0 agrega la sección *Talking with the learner* (respuesta primero y breve, una pregunta a la vez, una pista antes de la solución, siempre el siguiente paso) y hace que la regla de los términos del oficio apunte a `references/didactics.md`. Ningún lab enlazaba a `writing.md#explaining` ni a `writing.md#tone`, así que no hubo enlaces que mover. Las reglas nuevas de *didactics* son para labs nuevos.
+- **El `.venv` de esta máquina tiene las bibliotecas del electivo 2.5.** Con testcontainers instalado en el entorno compartido, `verify.py --strict` ya no salta las pruebas de PostgreSQL: las corre contra Docker y dio `3 failing` en la demo del 2.5, por el `~/.testcontainers.properties` viejo de siempre. Con `USERPROFILE` y `HOME` en una carpeta vacía, la demo dio `6 tests, 0 failing`. Es el entorno, no el repositorio, y el 🆘 del lab ya cubre ese caso.
